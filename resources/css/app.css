@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@page {
+    size: A4 portrait;
+    margin: 0;
+}
+
+@page f4 {
+    size: 210mm 330mm;
+    margin: 0;
+}
+
+@page a4 {
+    size: A4 portrait;
+    margin: 0;
+}
+
+@media print {
+    html, body {
+        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .letter-scale-wrap {
+        height: auto !important;
+        transform: none !important;
+    }
+
+    .print-sheet {
+        margin: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        transform: none !important;
+        width: 210mm !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        page-break-after: avoid !important;
+        break-inside: avoid !important;
+        break-before: avoid !important;
+        break-after: avoid !important;
+        overflow: hidden !important;
+    }
+
+    .print-sheet.paper-a4 {
+        height: 297mm !important;
+        max-height: 297mm !important;
+    }
+
+    .print-sheet.paper-f4 {
+        height: 330mm !important;
+        max-height: 330mm !important;
+    }
+
+    .print-sheet img {
+        max-width: 100% !important;
+        visibility: visible !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-sheet img.watermark-img {
+        opacity: 0.08 !important;
+    }
+
+    .print-sheet img.signer-stempel-img {
+        opacity: 0.85 !important;
+    }
+
+    .print-sheet img.absolute {
+        position: absolute !important;
+    }
+
+    .no-print,
+    .print\:hidden {
+        display: none !important;
+    }
+}
