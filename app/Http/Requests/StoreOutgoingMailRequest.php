@@ -40,7 +40,7 @@ class StoreOutgoingMailRequest extends FormRequest
             'lampiran' => ['nullable', 'string', 'max:191'],
             'perihal' => ['required', 'string', 'max:191'],
             'tanggal_surat' => ['required', 'date'],
-            'tujuan' => ['required', 'string', 'max:191'],
+            'tujuan' => ['required', 'string'],
 
             'pembuka' => ['required', 'string'],
             'isi_surat' => ['required', 'string'],

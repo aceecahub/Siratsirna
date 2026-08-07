@@ -9,7 +9,7 @@ const props = defineProps({
     },
     paper: {
         type: String,
-        default: 'a4', // 'a4' | 'f4'
+        default: 'f4', // Default F4 format
         validator: (value) => ['a4', 'f4'].includes(value),
     },
     scaled: {
@@ -38,6 +38,7 @@ const wrapper = ref(null);
 const scale = ref(1);
 
 const scaledHeight = computed(() => sheetHeightPx.value * scale.value);
+const scaledWidth = computed(() => sheetWidthPx * scale.value);
 
 let observer = null;
 
@@ -89,7 +90,43 @@ const l = computed(() => {
     };
 });
 
+const kabupatenFormatted = computed(() => {
+    const raw = (l.value.kabupaten || '').trim();
+    if (!raw) return 'PEMERINTAH DAERAH KABUPATEN TASIKMALAYA';
+    const upper = raw.toUpperCase();
+    if (upper.startsWith('PEMERINTAH')) return upper;
+    if (upper.startsWith('KABUPATEN')) return `PEMERINTAH DAERAH ${upper}`;
+    return `PEMERINTAH DAERAH KABUPATEN ${upper}`;
+});
+
+const kecamatanFormatted = computed(() => {
+    const raw = (l.value.kecamatan || '').trim();
+    if (!raw) return 'KECAMATAN CIGALONTANG';
+    const upper = raw.toUpperCase();
+    if (upper.startsWith('KECAMATAN')) return upper;
+    return `KECAMATAN ${upper}`;
+});
+
+const desaFormatted = computed(() => {
+    const raw = (l.value.nama_desa || '').trim();
+    if (!raw) return 'DESA SIRNAPUTRA';
+    const upper = raw.toUpperCase();
+    if (upper.startsWith('DESA')) return upper;
+    return `DESA ${upper}`;
+});
+
 const tanggalFormatted = computed(() => formatTanggal(l.value.tanggal_surat));
+
+function isArabicOrSalam(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase().trim();
+    return (
+        lower.includes('سلام') ||
+        lower.includes('assalamu') ||
+        lower.includes('wassalamu')
+    );
+}
+
 const signers = computed(() => {
     const list = props.letter?.penandatangan_list;
     if (Array.isArray(list) && list.length > 0) {
@@ -117,13 +154,14 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
 <template>
     <div
         ref="wrapper"
-        class="letter-scale-wrap"
+        class="letter-scale-wrap mx-auto relative"
         :style="{
             height: scaled ? `${scaledHeight}px` : 'auto',
+            width: scaled ? `${scaledWidth}px` : '100%',
         }"
     >
         <div
-            class="print-sheet relative mx-auto bg-white text-black overflow-hidden"
+            class="print-sheet relative bg-white text-black overflow-hidden"
             :class="[
                 props.paper === 'a4' ? 'paper-a4' : 'paper-f4',
                 { 'compact-mode': props.compact }
@@ -134,13 +172,13 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                 maxHeight: `${heightMm}mm`,
                 fontFamily: SERIF,
                 transform: scaled ? `scale(${scale})` : 'none',
-                transformOrigin: 'top center',
-                padding: props.compact ? '25mm 20mm 20mm 25mm' : '40mm 30mm 30mm 40mm',
+                transformOrigin: 'top left',
+                padding: props.compact ? '18mm 15mm 15mm 20mm' : '25mm 20mm 20mm 25mm',
                 boxShadow: '0 10px 30px -12px rgba(0,0,0,0.35)',
                 boxSizing: 'border-box',
             }"
         >
-            <!-- Watermark / Background Image Transparan di Tengah Halaman Surat -->
+            <!-- Watermark Transparan di Tengah Halaman -->
             <div
                 v-if="l.stempel"
                 class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden"
@@ -156,8 +194,9 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
             <div class="relative z-10 flex h-full flex-col justify-between" style="min-height: calc(100% - 2px)">
                 <!-- Kop Surat -->
                 <div class="shrink-0" style="break-inside: avoid; page-break-inside: avoid">
-                    <div class="flex items-center gap-4">
-                        <div class="w-[28mm] shrink-0">
+                    <div class="flex items-center">
+                        <!-- Logo Kiri -->
+                        <div class="w-[26mm] shrink-0 flex justify-center">
                             <img
                                 v-if="l.logo_kiri"
                                 :src="l.logo_kiri"
@@ -166,132 +205,165 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                             />
                             <div
                                 v-else
-                                class="flex h-[25mm] w-full items-center justify-center rounded border border-dashed border-gray-400 text-[8.5pt] font-semibold leading-tight text-gray-600 print:hidden"
+                                class="flex h-[25mm] w-full items-center justify-center rounded border border-dashed border-gray-400 text-[8pt] font-semibold leading-tight text-gray-500 print:hidden"
                             >
                                 Logo<br />Kabupaten
                             </div>
                         </div>
 
-                        <div class="min-w-0 flex-1 text-center leading-snug">
+                        <!-- Text Kop (Diisi pr-[26mm] agar teks tetap presisi di tengah halaman) -->
+                        <div
+                            class="min-w-0 flex-1 text-center leading-snug"
+                            :class="{ 'pr-[26mm]': !l.logo_kanan }"
+                        >
                             <div
-                                class="font-bold uppercase"
+                                class="font-bold uppercase tracking-tight text-black"
                                 :style="{ fontSize: compact ? '11.5pt' : '12.5pt' }"
                             >
-                                Pemerintah Kabupaten {{ l.kabupaten }}
+                                {{ kabupatenFormatted }}
                             </div>
                             <div
-                                class="font-bold uppercase"
-                                :style="{ fontSize: compact ? '9.5pt' : '10.5pt' }"
+                                class="font-bold uppercase tracking-tight text-black mt-0.5"
+                                :style="{ fontSize: compact ? '10.5pt' : '11.5pt' }"
                             >
-                                Kecamatan {{ l.kecamatan }}
+                                {{ kecamatanFormatted }}
                             </div>
                             <div
-                                class="mt-0.5 font-bold uppercase tracking-wider"
-                                :style="{ fontSize: compact ? '13.5pt' : '15pt' }"
+                                class="mt-0.5 font-bold uppercase tracking-wider text-black"
+                                :style="{ fontSize: compact ? '13.5pt' : '15.5pt' }"
                             >
-                                Desa {{ l.nama_desa }}
+                                {{ desaFormatted }}
                             </div>
-                            <div :style="{ fontSize: compact ? '8.5pt' : '9pt' }">
+                            <div
+                                class="mt-1 text-black font-normal"
+                                :style="{ fontSize: compact ? '8.5pt' : '9pt' }"
+                            >
                                 Alamat : {{ l.alamat }}
                             </div>
-                            <div :style="{ fontSize: compact ? '8.5pt' : '9pt' }">
-                                <template v-if="l.kode_pos">
-                                    Kode Pos {{ l.kode_pos }}
-                                </template>
-                                <template v-if="l.kontak">
-                                    <span v-if="l.kode_pos">&nbsp;|&nbsp;</span>
-                                    Telp/Hp {{ l.kontak }}
-                                </template>
+                            <div
+                                class="text-black font-normal"
+                                :style="{ fontSize: compact ? '8.5pt' : '9pt' }"
+                            >
                                 <template v-if="l.email_desa">
-                                    <span v-if="l.kode_pos || l.kontak"
-                                        >&nbsp;|&nbsp;</span
-                                    >
-                                    Email : {{ l.email_desa }}
+                                    E-Mail: {{ l.email_desa }}
+                                </template>
+                                <template v-if="l.email_desa && (l.kontak || l.kode_pos)">&nbsp;|&nbsp;</template>
+                                <template v-if="l.kontak">
+                                    Telp/HP: {{ l.kontak }}
+                                </template>
+                                <template v-if="l.kode_pos">
+                                    <span v-if="l.kontak || l.email_desa">&nbsp;|&nbsp;</span>
+                                    Kode Pos {{ l.kode_pos }}
                                 </template>
                             </div>
                         </div>
 
-                        <div class="w-[28mm] shrink-0">
+                        <!-- Logo Kanan (Hanya jika diunggah) -->
+                        <div v-if="l.logo_kanan" class="w-[26mm] shrink-0 flex justify-center">
                             <img
-                                v-if="l.logo_kanan"
                                 :src="l.logo_kanan"
                                 class="h-[25mm] w-full object-contain"
                                 alt=""
                             />
-                            <div
-                                v-else
-                                class="flex h-[25mm] w-full items-center justify-center rounded border border-dashed border-gray-400 text-[8.5pt] font-semibold leading-tight text-gray-600 print:hidden"
-                            >
-                                Logo<br />Desa
-                            </div>
                         </div>
                     </div>
 
-                    <div class="mt-2 border-b-[3px] border-black" />
+                    <!-- Double Line Garis Kop Surat -->
+                    <div class="mt-2.5 border-b-[2.5px] border-black" />
                     <div class="mt-[1.5px] border-b border-black" />
                 </div>
 
-                <!-- Badan Surat -->
-                <div class="flex flex-1 flex-col" :style="{ paddingTop: compact ? '3mm' : '5mm' }">
-                    <div class="flex-1 flex flex-col">
-                        <div
-                            class="text-right"
-                            :style="{ fontSize: compact ? '9.5pt' : '10.5pt' }"
-                        >
-                            {{ l.nama_desa }}, {{ tanggalFormatted }}
+                <!-- Section Tanggal, Meta & Tujuan Surat (Side by Side) -->
+                <div class="flex flex-1 flex-col" :style="{ paddingTop: compact ? '2mm' : '4mm' }">
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <div
+                                class="flex items-start justify-between gap-6"
+                                :style="{ fontSize: compact ? '9.5pt' : '10.5pt' }"
+                            >
+                                <!-- Kolom Kiri: Nomor, Sifat, Lampiran, Perihal -->
+                                <div class="w-[55%] min-w-0">
+                                    <div
+                                        class="grid"
+                                        :style="{
+                                            gridTemplateColumns: '20mm 4mm 1fr',
+                                            rowGap: '2px',
+                                            lineHeight: '1.4',
+                                        }"
+                                    >
+                                        <span>Nomor</span>
+                                        <span>:</span>
+                                        <span class="break-words font-medium">{{ l.nomor_surat }}</span>
+
+                                        <span>Sifat</span>
+                                        <span>:</span>
+                                        <span>{{ l.sifat || 'Biasa' }}</span>
+
+                                        <span>Lampiran</span>
+                                        <span>:</span>
+                                        <span>{{ l.lampiran || '-' }}</span>
+
+                                        <span>Perihal</span>
+                                        <span>:</span>
+                                        <span class="font-bold underline leading-snug break-words">{{ l.perihal }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Kolom Kanan: Tanggal Surat & Kepada Yth. -->
+                                <div class="w-[45%] min-w-0 leading-tight">
+                                    <div class="mb-3">
+                                        {{ l.nama_desa }}, {{ tanggalFormatted }}
+                                    </div>
+
+                                    <div>
+                                        <div class="font-normal">Kepada</div>
+                                        <div class="flex items-start">
+                                            <span class="font-semibold shrink-0 pr-1">Yth.</span>
+                                            <div class="whitespace-pre-line font-medium leading-snug flex-1">{{ l.tujuan }}</div>
+                                        </div>
+                                        <div class="mt-1 pl-6">di -</div>
+                                        <div class="pl-10 font-bold">Tempat</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Salam Pembuka -->
+                            <div
+                                v-if="l.pembuka"
+                                class="mt-4"
+                                :class="isArabicOrSalam(l.pembuka) ? 'text-center font-bold text-[11.5pt]' : 'text-justify text-[10.5pt]'"
+                            >
+                                {{ l.pembuka }}
+                            </div>
+
+                            <!-- Isi Surat Utama (Rata Kanan-Kiri Justify) -->
+                            <div
+                                v-if="l.isi_surat"
+                                class="mt-3 whitespace-pre-line text-justify leading-relaxed"
+                                :style="{
+                                    fontSize: compact ? '9.5pt' : '10.5pt',
+                                    lineHeight: compact ? '1.45' : '1.6',
+                                    textAlign: 'justify',
+                                    textJustify: 'inter-word'
+                                }"
+                            >
+                                {{ l.isi_surat }}
+                            </div>
+
+                            <!-- Salam Penutup -->
+                            <div
+                                v-if="l.penutup"
+                                class="mt-3"
+                                :class="isArabicOrSalam(l.penutup) ? 'text-center font-bold text-[11.5pt]' : 'text-justify text-[10.5pt]'"
+                            >
+                                {{ l.penutup }}
+                            </div>
                         </div>
 
-                        <div
-                            class="mt-2 grid"
-                            :style="{
-                                fontSize: compact ? '9.5pt' : '10.5pt',
-                                gridTemplateColumns: '24mm 5mm 1fr',
-                                rowGap: '1.5px',
-                            }"
-                        >
-                            <span>Nomor</span>
-                            <span>:</span>
-                            <span>{{ l.nomor_surat }}</span>
-
-                            <span>Lampiran</span>
-                            <span>:</span>
-                            <span>{{ l.lampiran || '-' }}</span>
-
-                            <span>Perihal</span>
-                            <span>:</span>
-                            <span class="font-bold">{{ l.perihal }}</span>
-
-                            <template v-if="l.sifat && l.sifat !== 'Biasa'">
-                                <span>Sifat</span>
-                                <span>:</span>
-                                <span>{{ l.sifat }}</span>
-                            </template>
-                        </div>
-
-                        <div
-                            class="mt-3"
-                            :style="{ fontSize: compact ? '9.5pt' : '10.5pt', lineHeight: '1.4' }"
-                        >
-                            <div>Kepada Yth.</div>
-                            <div class="font-semibold">{{ l.tujuan }}</div>
-                            <div>di</div>
-                            <div>Tempat</div>
-                        </div>
-
-                        <!-- Isi Surat Rata Kanan Kiri (Justify) -->
-                        <div
-                            class="mt-3 space-y-2.5 text-justify"
-                            :style="{ fontSize: compact ? '9.5pt' : '10.5pt', lineHeight: compact ? '1.4' : '1.55', textAlign: 'justify', textJustify: 'inter-word' }"
-                        >
-                            <p v-if="l.pembuka" class="text-justify" style="text-align: justify;">{{ l.pembuka }}</p>
-                            <p v-if="l.isi_surat" class="whitespace-pre-line text-justify" style="text-align: justify;">{{ l.isi_surat }}</p>
-                            <p v-if="l.penutup" class="text-justify" style="text-align: justify;">{{ l.penutup }}</p>
-                        </div>
-
-                        <!-- Tanda Tangan Digital Dinamis (Bisa 1, 2, atau Mengetahui di Bawah) -->
+                        <!-- Tanda Tangan Digital -->
                         <div
                             class="shrink-0 space-y-2"
-                            :class="compact ? 'mt-2 pt-1' : 'mt-4 pt-1'"
+                            :class="compact ? 'mt-3 pt-1' : 'mt-5 pt-1'"
                             :style="{ fontSize: compact ? '9.5pt' : '10.5pt', breakInside: 'avoid', pageBreakInside: 'avoid' }"
                         >
                             <!-- Baris Pertama Signer (Kiri & Kanan) -->
@@ -307,8 +379,8 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                                         </div>
 
                                         <div
-                                            class="relative mx-auto flex items-center justify-center my-0.5"
-                                            :class="compact ? 'h-[15mm] w-[56mm]' : 'h-[19mm] w-[60mm]'"
+                                            class="relative mx-auto flex items-center justify-center my-1"
+                                            :class="compact ? 'h-[16mm] w-[56mm]' : 'h-[20mm] w-[60mm]'"
                                         >
                                             <img
                                                 v-if="signer.stempel"
@@ -322,12 +394,12 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                                                 v-if="signer.tanda_tangan"
                                                 :src="signer.tanda_tangan"
                                                 class="relative z-10 object-contain"
-                                                :class="compact ? 'max-h-[15mm] max-w-[54mm]' : 'max-h-[19mm] max-w-[58mm]'"
+                                                :class="compact ? 'max-h-[16mm] max-w-[54mm]' : 'max-h-[20mm] max-w-[58mm]'"
                                                 alt=""
                                             />
                                         </div>
 
-                                        <div class="font-extrabold underline tracking-wide" :style="{ fontSize: compact ? '10pt' : '11.5pt' }">
+                                        <div class="font-extrabold underline tracking-wide uppercase" :style="{ fontSize: compact ? '10pt' : '11pt' }">
                                             {{ signer.nama }}
                                         </div>
                                         <div :style="{ fontSize: compact ? '8.5pt' : '9.5pt' }" class="mt-0.5 font-medium">
@@ -350,8 +422,8 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                                         </div>
 
                                         <div
-                                            class="relative mx-auto flex items-center justify-center my-0.5"
-                                            :class="compact ? 'h-[15mm] w-[56mm]' : 'h-[19mm] w-[60mm]'"
+                                            class="relative mx-auto flex items-center justify-center my-1"
+                                            :class="compact ? 'h-[16mm] w-[56mm]' : 'h-[20mm] w-[60mm]'"
                                         >
                                             <img
                                                 v-if="signer.stempel"
@@ -365,12 +437,12 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                                                 v-if="signer.tanda_tangan"
                                                 :src="signer.tanda_tangan"
                                                 class="relative z-10 object-contain"
-                                                :class="compact ? 'max-h-[15mm] max-w-[54mm]' : 'max-h-[19mm] max-w-[58mm]'"
+                                                :class="compact ? 'max-h-[16mm] max-w-[54mm]' : 'max-h-[20mm] max-w-[58mm]'"
                                                 alt=""
                                             />
                                         </div>
 
-                                        <div class="font-extrabold underline tracking-wide" :style="{ fontSize: compact ? '10pt' : '11.5pt' }">
+                                        <div class="font-extrabold underline tracking-wide uppercase" :style="{ fontSize: compact ? '10pt' : '11pt' }">
                                             {{ signer.nama }}
                                         </div>
                                         <div :style="{ fontSize: compact ? '8.5pt' : '9.5pt' }" class="mt-0.5 font-medium">
@@ -394,8 +466,8 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                                     </div>
 
                                     <div
-                                        class="relative mx-auto flex items-center justify-center my-0.5"
-                                        :class="compact ? 'h-[15mm] w-[56mm]' : 'h-[19mm] w-[60mm]'"
+                                        class="relative mx-auto flex items-center justify-center my-1"
+                                        :class="compact ? 'h-[16mm] w-[56mm]' : 'h-[20mm] w-[60mm]'"
                                     >
                                         <img
                                             v-if="signer.stempel"
@@ -409,12 +481,12 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                                             v-if="signer.tanda_tangan"
                                             :src="signer.tanda_tangan"
                                             class="relative z-10 object-contain"
-                                            :class="compact ? 'max-h-[15mm] max-w-[54mm]' : 'max-h-[19mm] max-w-[58mm]'"
+                                            :class="compact ? 'max-h-[16mm] max-w-[54mm]' : 'max-h-[20mm] max-w-[58mm]'"
                                             alt=""
                                         />
                                     </div>
 
-                                    <div class="font-extrabold underline tracking-wide" :style="{ fontSize: compact ? '10pt' : '11.5pt' }">
+                                    <div class="font-extrabold underline tracking-wide uppercase" :style="{ fontSize: compact ? '10pt' : '11pt' }">
                                         {{ signer.nama }}
                                     </div>
                                     <div :style="{ fontSize: compact ? '8.5pt' : '9.5pt' }" class="mt-0.5 font-medium">

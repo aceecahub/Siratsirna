@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('lampiran', 191)->nullable();
             $table->string('perihal', 191);
             $table->date('tanggal_surat');
-            $table->string('tujuan', 191);
+            $table->text('tujuan');
 
             // Isi surat
             $table->text('pembuka');

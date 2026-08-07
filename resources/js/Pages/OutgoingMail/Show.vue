@@ -12,7 +12,7 @@ const props = defineProps({
     },
 });
 
-const paper = ref('a4');
+const paper = ref('f4');
 const isCompact = ref(false);
 
 async function printLetter() {

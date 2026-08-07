@@ -125,7 +125,7 @@ function applyTemplate(event) {
 }
 
 const showPreview = ref(true);
-const paper = ref('a4');
+const paper = ref('f4');
 const isCompact = ref(false);
 
 function addSigner() {
@@ -294,8 +294,8 @@ function filePreviewUrl(field) {
                             <div
                                 class="grid grid-cols-1 gap-4 sm:grid-cols-2"
                             >
-                                <div>
-                                    <InputLabel value="Logo Kiri (Kabupaten)" :optional="true" />
+                                <div class="sm:col-span-2">
+                                    <InputLabel value="Logo Kop Surat (Kabupaten / Pemda - Sebelah Kiri)" :optional="true" />
                                     <input
                                         type="file"
                                         accept="image/png,image/jpeg"
@@ -305,31 +305,12 @@ function filePreviewUrl(field) {
                                     <img
                                         v-if="filePreviewUrl('logo_kiri')"
                                         :src="filePreviewUrl('logo_kiri')"
-                                        alt="Logo kiri"
+                                        alt="Logo Kop Surat"
                                         class="mt-2 h-14 object-contain"
                                     />
                                     <InputError
                                         class="mt-1"
                                         :message="form.errors.logo_kiri"
-                                    />
-                                </div>
-                                <div>
-                                    <InputLabel value="Logo Kanan (Desa)" :optional="true" />
-                                    <input
-                                        type="file"
-                                        accept="image/png,image/jpeg"
-                                        @change="onImageUpload('logo_kanan', $event)"
-                                        class="mt-1 block w-full cursor-pointer text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-gray-800 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white dark:text-gray-400 dark:file:bg-gray-200 dark:file:text-gray-800"
-                                    />
-                                    <img
-                                        v-if="filePreviewUrl('logo_kanan')"
-                                        :src="filePreviewUrl('logo_kanan')"
-                                        alt="Logo kanan"
-                                        class="mt-2 h-14 object-contain"
-                                    />
-                                    <InputError
-                                        class="mt-1"
-                                        :message="form.errors.logo_kanan"
                                     />
                                 </div>
 
@@ -523,13 +504,16 @@ function filePreviewUrl(field) {
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <InputLabel value="Penerima / Tujuan" />
-                                    <input
+                                    <InputLabel value="Penerima / Tujuan (Bisa Banyak / Lebih dari 1 Penerima)" />
+                                    <textarea
                                         v-model="form.tujuan"
-                                        type="text"
-                                        placeholder="cth. Bapak/Ibu Kepala Seksi ..."
+                                        rows="3"
+                                        placeholder="Tuliskan penerima surat. Jika lebih dari 1, tekan Enter untuk menambah baris (atau beri penomoran).&#10;Contoh:&#10;1. Ketua RT/RW&#10;2. KPM PKH/BPNT&#10;3. Camat Cigalontang"
                                         :class="INPUT_CLASS"
                                     />
+                                    <p class="mt-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                                        Tips: Tekan Enter untuk menambah penerima berikutnya. Sistem akan menata daftar penerima secara rapi di surat.
+                                    </p>
                                     <InputError
                                         class="mt-1"
                                         :message="form.errors.tujuan"

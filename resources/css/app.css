@@ -2,13 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    body {
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #0f172a;
+        background-color: #f8fafc;
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+/* Custom Scrollbar for Enterprise Tables & Sidebar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #009675;
+}
+
 @page {
-    size: A4 portrait;
+    size: 210mm 330mm portrait;
     margin: 0;
 }
 
 @page f4 {
-    size: 210mm 330mm;
+    size: 210mm 330mm portrait;
     margin: 0;
 }
 

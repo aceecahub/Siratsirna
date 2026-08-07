@@ -11,10 +11,10 @@ defineProps({
 </script>
 
 <template>
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
         <span v-if="value">{{ value }}</span>
         <span v-else><slot /></span>
-        <span v-if="optional" class="text-xs font-normal text-gray-400">
+        <span v-if="optional" class="ml-1 text-[11px] font-normal text-slate-400">
             (opsional)
         </span>
     </label>

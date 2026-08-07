@@ -27,6 +27,7 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
 
 const widthClass = computed(() => {
     return {
+        44: 'w-44',
         48: 'w-48',
     }[props.width.toString()];
 });
@@ -36,6 +37,8 @@ const alignmentClasses = computed(() => {
         return 'ltr:origin-top-left rtl:origin-top-right start-0';
     } else if (props.align === 'right') {
         return 'ltr:origin-top-right rtl:origin-top-left end-0';
+    } else if (props.align === 'top-right') {
+        return 'ltr:origin-bottom-right rtl:origin-bottom-left end-0 bottom-full mb-2';
     } else {
         return 'origin-top';
     }

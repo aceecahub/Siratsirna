@@ -93,7 +93,7 @@ const total = props.mails.meta?.total ?? 0;
         <template #header>
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                    <span class="text-xs font-bold uppercase tracking-wider text-primary dark:text-primary">
                         Administrasi Surat
                     </span>
                     <h1 class="text-2xl font-black text-slate-900 dark:text-white">
@@ -103,7 +103,7 @@ const total = props.mails.meta?.total ?? 0;
                 <button
                     type="button"
                     @click="showUpload = true"
-                    class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-500 active:scale-95"
+                    class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-primary/90 active:scale-95"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -118,13 +118,13 @@ const total = props.mails.meta?.total ?? 0;
                 <!-- Alert Success -->
                 <div
                     v-if="$page.props.flash?.success"
-                    class="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-800 dark:border-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-200 shadow-sm"
+                    class="rounded-md border border-primary/30 bg-primary/5 px-4 py-3 text-xs font-semibold text-primary dark:border-primary/20 dark:bg-primary/10 dark:text-emerald-200 shadow-sm"
                 >
                     {{ $page.props.flash.success }}
                 </div>
 
                 <!-- Main Container Card -->
-                <div class="rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+                <div class="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
                     <!-- Filters Grid -->
                     <div class="grid grid-cols-1 gap-4 border-b border-slate-100 p-5 md:grid-cols-12 dark:border-slate-800">
                         <div class="md:col-span-4">
@@ -133,7 +133,7 @@ const total = props.mails.meta?.total ?? 0;
                                 v-model="filters.search"
                                 type="text"
                                 placeholder="Nomor agenda, pengirim, perihal..."
-                                class="w-full rounded-xl border-slate-200 text-xs font-medium focus:border-blue-500 focus:ring-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+                                class="w-full rounded-md border-slate-200 text-xs font-medium focus:border-primary focus:ring-primary/20 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
                             />
                         </div>
 
@@ -142,7 +142,7 @@ const total = props.mails.meta?.total ?? 0;
                             <select
                                 v-model="filters.kategori"
                                 @change="onFilterChange"
-                                class="w-full rounded-xl border-slate-200 text-xs font-bold text-slate-800 focus:border-blue-500 focus:ring-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+                                class="w-full rounded-md border-slate-200 text-xs font-bold text-slate-800 focus:border-primary focus:ring-primary/20 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
                             >
                                 <option value="">Semua Kategori</option>
                                 <option
@@ -161,7 +161,7 @@ const total = props.mails.meta?.total ?? 0;
                                 v-model="filters.tanggal_awal"
                                 type="date"
                                 @change="onFilterChange"
-                                class="w-full rounded-xl border-slate-200 text-xs font-medium focus:border-blue-500 focus:ring-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+                                class="w-full rounded-md border-slate-200 text-xs font-medium focus:border-primary focus:ring-primary/20 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
                             />
                         </div>
 
@@ -171,7 +171,7 @@ const total = props.mails.meta?.total ?? 0;
                                 v-model="filters.tanggal_akhir"
                                 type="date"
                                 @change="onFilterChange"
-                                class="w-full rounded-xl border-slate-200 text-xs font-medium focus:border-blue-500 focus:ring-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+                                class="w-full rounded-md border-slate-200 text-xs font-medium focus:border-primary focus:ring-primary/20 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
                             />
                         </div>
 
@@ -179,7 +179,7 @@ const total = props.mails.meta?.total ?? 0;
                             <button
                                 type="button"
                                 @click="resetFilters"
-                                class="w-full rounded-xl border border-slate-300 bg-white py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                                class="w-full rounded-md border border-slate-300 bg-white py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                             >
                                 Reset Filter
                             </button>
@@ -194,7 +194,7 @@ const total = props.mails.meta?.total ?? 0;
                             class="p-4 space-y-2 hover:bg-slate-50 dark:hover:bg-slate-800/40"
                         >
                             <div class="flex items-center justify-between gap-2">
-                                <span class="font-mono text-xs font-bold text-blue-700 dark:text-blue-400">
+                                <span class="font-mono text-xs font-bold text-primary dark:text-primary">
                                     No. Agenda #{{ mail.nomor_agenda }}
                                 </span>
                                 <span class="rounded bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800 dark:bg-blue-950 dark:text-blue-300">
@@ -220,7 +220,7 @@ const total = props.mails.meta?.total ?? 0;
                                 <a
                                     :href="route('surat-masuk.download', mail.id)"
                                     target="_blank"
-                                    class="flex-1 text-center rounded-lg bg-blue-600 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-500"
+                                    class="flex-1 text-center rounded-lg bg-blue-600 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary/50"
                                 >
                                     Unduh
                                 </a>
@@ -254,7 +254,7 @@ const total = props.mails.meta?.total ?? 0;
                             </thead>
                             <tbody class="divide-y divide-slate-100 bg-white dark:divide-slate-800 dark:bg-slate-900">
                                 <tr v-for="mail in mails.data" :key="mail.id" class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
-                                    <td class="whitespace-nowrap px-5 py-4 text-xs font-mono font-bold text-blue-700 dark:text-blue-400">
+                                    <td class="whitespace-nowrap px-5 py-4 text-xs font-mono font-bold text-primary dark:text-primary">
                                         #{{ mail.nomor_agenda }}
                                     </td>
                                     <td class="whitespace-nowrap px-5 py-4 text-xs font-medium text-slate-600 dark:text-slate-300">
@@ -269,7 +269,7 @@ const total = props.mails.meta?.total ?? 0;
                                         {{ mail.perihal }}
                                     </td>
                                     <td class="whitespace-nowrap px-5 py-4">
-                                        <span class="inline-flex rounded-md bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                                        <span class="inline-flex rounded-md bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-primary dark:bg-blue-950 dark:text-blue-300">
                                             {{ mail.kategori }}
                                         </span>
                                     </td>
@@ -293,7 +293,7 @@ const total = props.mails.meta?.total ?? 0;
                                             <a
                                                 :href="route('surat-masuk.download', mail.id)"
                                                 target="_blank"
-                                                class="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-blue-500"
+                                                class="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-primary/50"
                                             >
                                                 Unduh
                                             </a>
