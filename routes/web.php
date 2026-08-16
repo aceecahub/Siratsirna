@@ -88,14 +88,14 @@ Route::get('/dashboard', function () {
 
     // Breakdown for Donut Chart (Jenis Surat Keterangan)
     $breakdownStats = [
-        'Domisili' => \App\Models\DomicileLetter::count(),
-        'SKTM' => \App\Models\PovertyLetter::count(),
-        'Nikah' => \App\Models\MarriageLetter::count(),
-        'E-KTP' => \App\Models\KtpLetter::count(),
+        'Domisili'   => \App\Models\DomicileLetter::count(),
+        'SKTM'       => \App\Models\PovertyLetter::count(),
+        'Nikah'      => \App\Models\MarriageLetter::count(),
+        'E-KTP'      => \App\Models\KtpLetter::count(),
         'Kehilangan' => \App\Models\LossLetter::count(),
-        'Penghasilan' => \App\Models\IncomeLetter::count(),
+        'Penghasilan'=> \App\Models\IncomeLetter::count(),
         'Ahli Waris' => \App\Models\HeirLetter::count(),
-        'Bantuan' => \App\Models\AssistanceLetter::count(),
+        'Bantuan'    => \App\Models\AssistanceLetter::count(),
     ];
 
     $breakdownChartData = [
@@ -106,14 +106,14 @@ Route::get('/dashboard', function () {
     // Stacked Bar Chart for Monthly Breakdown of 8 Letters
     $stackedCategories = $chartCategories;
     $modelsMap = [
-        'Domisili' => \App\Models\DomicileLetter::class,
-        'SKTM' => \App\Models\PovertyLetter::class,
-        'Nikah' => \App\Models\MarriageLetter::class,
-        'E-KTP' => \App\Models\KtpLetter::class,
+        'Domisili'   => \App\Models\DomicileLetter::class,
+        'SKTM'       => \App\Models\PovertyLetter::class,
+        'Nikah'      => \App\Models\MarriageLetter::class,
+        'E-KTP'      => \App\Models\KtpLetter::class,
         'Kehilangan' => \App\Models\LossLetter::class,
-        'Penghasilan' => \App\Models\IncomeLetter::class,
+        'Penghasilan'=> \App\Models\IncomeLetter::class,
         'Ahli Waris' => \App\Models\HeirLetter::class,
-        'Bantuan' => \App\Models\AssistanceLetter::class,
+        'Bantuan'    => \App\Models\AssistanceLetter::class,
     ];
     
     $stackedSeries = [];
@@ -131,30 +131,61 @@ Route::get('/dashboard', function () {
 
     $stackedChartData = [
         'categories' => $stackedCategories,
-        'series' => $stackedSeries
+        'series'     => $stackedSeries
     ];
 
     $totalSuratKeterangan = array_sum($breakdownStats);
 
+    // Stats per jenis surat keterangan bulan ini
+    $keteranganBulanIni = [
+        'Domisili'   => \App\Models\DomicileLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'SKTM'       => \App\Models\PovertyLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Nikah'      => \App\Models\MarriageLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'E-KTP'      => \App\Models\KtpLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Kehilangan' => \App\Models\LossLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Penghasilan'=> \App\Models\IncomeLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Ahli Waris' => \App\Models\HeirLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Bantuan'    => \App\Models\AssistanceLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+    ];
+
+    $suratKeteranganBulanIni = array_sum($keteranganBulanIni);
+
+    // 5 surat keterangan terbaru (gabungan semua jenis)
+    $recentLetters = collect([
+        ...\App\Models\DomicileLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Domisili', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-domisili']),
+        ...\App\Models\PovertyLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'SKTM', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-tidak-mampu']),
+        ...\App\Models\MarriageLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Nikah', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-menikah']),
+        ...\App\Models\KtpLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'E-KTP', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-pengantar-ktp']),
+        ...\App\Models\LossLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Kehilangan', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-kehilangan']),
+        ...\App\Models\IncomeLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Penghasilan', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-penghasilan']),
+        ...\App\Models\HeirLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Ahli Waris', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-ahli-waris']),
+        ...\App\Models\AssistanceLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Bantuan', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-permohonan-bantuan']),
+    ])->sortByDesc('created_at')->take(5)->values()->toArray();
+
     return Inertia::render('Dashboard', [
         'stats' => [
-            'totalSuratMasuk' => \App\Models\IncomingMail::count(),
-            'totalSuratKeluar' => \App\Models\OutgoingMail::count(),
-            'totalSuratKeterangan' => $totalSuratKeterangan,
-            'suratMasukBulanIni' => \App\Models\IncomingMail::whereYear('tanggal_diterima', $now->year)
+            'totalSuratMasuk'         => \App\Models\IncomingMail::count(),
+            'totalSuratKeluar'        => \App\Models\OutgoingMail::count(),
+            'totalSuratKeterangan'    => $totalSuratKeterangan,
+            'suratMasukBulanIni'      => \App\Models\IncomingMail::whereYear('tanggal_diterima', $now->year)
                 ->whereMonth('tanggal_diterima', $now->month)
                 ->count(),
-            'suratKeluarBulanIni' => \App\Models\OutgoingMail::whereYear('tanggal_surat', $now->year)
+            'suratKeluarBulanIni'     => \App\Models\OutgoingMail::whereYear('tanggal_surat', $now->year)
                 ->whereMonth('tanggal_surat', $now->month)
                 ->count(),
-            'breakdown' => $breakdownStats,
+            'suratKeteranganBulanIni' => $suratKeteranganBulanIni,
+            'totalSemuaSurat'         => \App\Models\IncomingMail::count() + \App\Models\OutgoingMail::count() + $totalSuratKeterangan,
+            'breakdown'               => $breakdownStats,
+            'keteranganBulanIni'      => $keteranganBulanIni,
         ],
-        'recentOutgoing' => \App\Http\Resources\OutgoingMailResource::collection(
+        'recentOutgoing'     => \App\Http\Resources\OutgoingMailResource::collection(
             \App\Models\OutgoingMail::latest()->take(5)->get()
         ),
-        'recentIncoming' => \App\Models\IncomingMail::latest()->take(5)->get(),
-        'chartData' => $chartData,
+        'recentIncoming'     => \App\Models\IncomingMail::latest()->take(5)->get(),
+        'recentLetters'      => $recentLetters,
+        'chartData'          => $chartData,
         'breakdownChartData' => $breakdownChartData,
+        'stackedChartData'   => $stackedChartData,
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

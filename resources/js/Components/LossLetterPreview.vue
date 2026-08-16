@@ -39,14 +39,14 @@ onBeforeUnmount(() => observer?.disconnect());
 const l = computed(() => {
     const s = props.letter ?? {};
     return {
-        kabupaten:  s.kabupaten  || '',
-        kecamatan:  s.kecamatan  || '',
-        nama_desa:  s.nama_desa  || '',
+        kabupaten:  s.kabupaten  || 'Tasikmalaya',
+        kecamatan:  s.kecamatan  || 'Cigalontang',
+        nama_desa:  s.nama_desa  || 'Sirnaputra',
         alamat:     s.alamat     || '',
         kode_pos:   s.kode_pos   || '',
         kontak:     s.kontak     || '',
         email_desa: s.email_desa || '',
-        logo_kiri:  s.logo_kiri  || null,
+        logo_kiri:  s.logo_kiri  || '/images/logo-tasikmalaya.png',
         logo_kanan: s.logo_kanan || null,
 
         nomor_surat:   s.nomor_surat   || '',
@@ -176,19 +176,22 @@ const kalimatPenutup = computed(() =>
                                 :style="{ fontSize: compact ? '13pt' : '15pt' }">
                                 {{ desaFormatted }}
                             </div>
-                            <div class="mt-1" :style="{ fontSize: compact ? '8pt' : '8.5pt' }">
-                                <template v-if="l.alamat">Kantor :JL {{ l.alamat }}</template>
+
+                            <div class="mt-1 text-black font-normal" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                Kantor : JalanPacihayan No 16 Sirnaputra Cigalontang
                             </div>
-                            <div :style="{ fontSize: compact ? '8pt' : '8.5pt' }">
-                                <template v-if="l.email_desa">{{ l.email_desa }}</template>
-                                <template v-if="l.email_desa && l.kontak"> | </template>
-                                <template v-if="l.kontak">Telp : {{ l.kontak }}</template>
+                            <div class="text-black font-normal" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                E-mail : <span class="text-blue-700 underline font-semibold">sirnaputra@gmail.com</span>
                             </div>
-                            <div :style="{ fontSize: compact ? '8pt' : '8.5pt' }">
-                                <template v-if="l.kode_pos">Kode Pos {{ l.kode_pos }}</template>
+                            <div class="text-black font-normal uppercase tracking-widest" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                TASIKMALAYA
+                            </div>
+                            <div class="text-black font-normal" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                KodePos 46463
                             </div>
                         </div>
 
+                        <!-- Logo Kanan (Hanya jika diunggah) -->
                         <div v-if="l.logo_kanan" class="w-[26mm] shrink-0 flex justify-center">
                             <img :src="l.logo_kanan" class="h-[24mm] w-full object-contain" alt="" />
                         </div>

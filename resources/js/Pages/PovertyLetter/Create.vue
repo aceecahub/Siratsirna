@@ -4,18 +4,19 @@ import { Head, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import SignaturePad from '@/Components/SignaturePad.vue';
 import PovertyLetterPreview from '@/Components/PovertyLetterPreview.vue';
 import { printSheet } from '@/lib/print';
 
 const INPUT_CLASS = 'mt-1.5 block w-full rounded-xl border-slate-300/90 text-xs font-medium shadow-sm transition focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 dark:border-slate-700/80 dark:bg-slate-900 dark:text-slate-200';
 const SECTION_CLASS = 'rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/90';
-const SECTION_TITLE = 'mb-5 flex items-center gap-2.5 border-b border-slate-100 pb-3 text-xs font-black uppercase tracking-wider text-slate-800 dark:border-slate-800 dark:text-slate-200';
+const SECTION_TITLE = 'flex items-center gap-2.5 border-b border-slate-100 dark:border-slate-800 px-5 py-3.5 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide';
 
 // ─── Form ────────────────────────────────────────────────────────────
 const form = useForm({
-    kabupaten:  '',
-    kecamatan:  '',
-    nama_desa:  '',
+    kabupaten:  'Tasikmalaya',
+    kecamatan:  'Cigalontang',
+    nama_desa:  'Sirnaputra',
     alamat:     '',
     kode_pos:   '',
     kontak:     '',
@@ -55,7 +56,7 @@ function removeSigner(idx) {
 }
 
 // ─── Image previews (kop) ────────────────────────────────────────────
-const uploads = reactive({ logo_kiri: null, logo_kanan: null, stempel: null });
+const uploads = reactive({ logo_kiri: '/images/logo-tasikmalaya.png', logo_kanan: null, tanda_tangan: null, stempel: null });
 
 function readFile(file) {
     return new Promise(resolve => {
@@ -181,7 +182,7 @@ function submit() {
                     <div class="space-y-6 print:hidden">
 
                         <!-- 1. Kop Surat -->
-                        <section :class="SECTION_CLASS">
+                        <section :class="SECTION_CLASS" style="display: none;">
                             <h3 :class="SECTION_TITLE">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-5 w-5 text-rose-500">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
@@ -414,11 +415,18 @@ function submit() {
                                         </div>
                                         <!-- TTD Upload -->
                                         <div class="sm:col-span-2">
-                                            <InputLabel value="Upload Tanda Tangan (PNG transparan)" :optional="true" />
-                                            <input type="file" accept="image/*" @change="onSignerTtd(idx, $event)"
-                                                class="mt-1 block w-full cursor-pointer text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-rose-800 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white" />
-                                            <img v-if="signer.tanda_tangan" :src="signer.tanda_tangan"
-                                                class="mt-2 h-10 object-contain" alt="TTD" />
+                                            <InputLabel value="Tanda Tangan Digital (Gambar Langsung / Unggah Foto)" :optional="true" />
+                                    <div class="mt-1">
+                                        <SignaturePad
+                                            :height="150"
+                                            @change="(file, dataUrl) => { form.tanda_tangan = file; uploads.tanda_tangan = dataUrl; }"
+                                        />
+                                    </div>
+                                    <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                                        <span>Atau unggah file gambar tanda tangan:</span>
+                                        <input type="file" accept="image/*" @change="onImageUpload('tanda_tangan', $event)"
+                                            class="text-xs text-gray-500 file:rounded file:border-0 file:bg-slate-200 file:px-2 file:py-1 file:text-xs file:font-semibold" />
+                                    </div>
                                         </div>
                                         <!-- Stempel per signer -->
                                         <div class="sm:col-span-2">
@@ -451,7 +459,7 @@ function submit() {
 
                     <!-- ══════════ LIVE PREVIEW ══════════ -->
                     <div class="sticky top-4 space-y-4" id="live-preview">
-                        <div class="rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm print:hidden dark:border-slate-800 dark:bg-slate-900 flex flex-wrap items-center justify-between gap-3">
+                        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm print:hidden dark:border-slate-800 dark:bg-slate-900 flex flex-wrap items-center justify-between gap-3">
                             <div class="flex items-center gap-2">
                                 <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Kertas:</span>
                                 <select v-model="paper" class="rounded-lg border-slate-300 py-1 text-xs font-bold dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
@@ -461,7 +469,7 @@ function submit() {
                             </div>
                             <div class="flex items-center gap-2">
                                 <button type="button" @click="compact = !compact"
-                                    :class="[compact ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-950' : 'bg-white border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300', 'inline-flex items-center gap-1 rounded-xl border px-2.5 py-1 text-xs font-bold transition shadow-sm']">
+                                    :class="[compact ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-950' : 'bg-white border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400', 'inline-flex items-center gap-1 rounded-xl border px-2.5 py-1 text-xs font-bold transition shadow-sm']">
                                     Mode Ringkas
                                 </button>
                                 <button type="button" @click="printSheet()"
@@ -474,7 +482,7 @@ function submit() {
                             </div>
                         </div>
 
-                        <div class="rounded-2xl bg-slate-200/70 p-4 sm:p-5 print:p-0 print:bg-transparent dark:bg-slate-900/60 shadow-inner overflow-auto">
+                        <div class="rounded-xl bg-slate-100 p-4 print:p-0 print:bg-transparent dark:bg-slate-800/50 shadow-inner overflow-auto">
                             <PovertyLetterPreview :letter="previewLetter" :paper="paper" :compact="compact" :scaled="true" />
                         </div>
                     </div>
