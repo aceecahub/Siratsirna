@@ -118,39 +118,27 @@ const previewLetter = computed(() => ({
 
 // ─── Submit ──────────────────────────────────────────────────────────
 function submit() {
-    // Pakai FormData manual supaya bisa kirim file per signer
-    const fd = new FormData();
+    form.transform((data) => {
+        const signerData = signers.map(s => ({
+            peran:            s.peran,
+            label_mengetahui: s.label_mengetahui,
+            jabatan:          s.jabatan,
+            nama:             s.nama,
+            nip_niapd:        s.nip_niapd,
+        }));
 
-    // Fields biasa
-    const fields = ['kabupaten','kecamatan','nama_desa','alamat','kode_pos','kontak','email_desa',
-        'nomor_surat','tanggal_surat','nama_warga','tempat_lahir','tanggal_lahir','pekerjaan',
-        'alamat_warga','rt','rw','dusun','keterangan'];
+        const transformed = {
+            ...data,
+            penandatangan_list: JSON.stringify(signerData),
+        };
 
-    for (const f of fields) {
-        if (form[f] !== null && form[f] !== undefined) fd.append(f, form[f]);
-    }
+        signers.forEach((s, idx) => {
+            if (s._ttdFile)    transformed[`tanda_tangan_signer_${idx}`] = s._ttdFile;
+            if (s._stempelFile) transformed[`stempel_signer_${idx}`] = s._stempelFile;
+        });
 
-    if (form.logo_kiri)  fd.append('logo_kiri', form.logo_kiri);
-    if (form.logo_kanan) fd.append('logo_kanan', form.logo_kanan);
-    if (form.stempel)    fd.append('stempel', form.stempel);
-
-    // Signer list JSON (tanpa file binary)
-    const signerData = signers.map(s => ({
-        peran:            s.peran,
-        label_mengetahui: s.label_mengetahui,
-        jabatan:          s.jabatan,
-        nama:             s.nama,
-        nip_niapd:        s.nip_niapd,
-    }));
-    fd.append('penandatangan_list', JSON.stringify(signerData));
-
-    // File per signer
-    signers.forEach((s, idx) => {
-        if (s._ttdFile)    fd.append(`tanda_tangan_signer_${idx}`, s._ttdFile);
-        if (s._stempelFile) fd.append(`stempel_signer_${idx}`, s._stempelFile);
-    });
-
-    form.transform(() => fd).post(route('surat-tidak-mampu.store'), {
+        return transformed;
+    }).post(route('surat-tidak-mampu.store'), {
         preserveScroll: true,
         forceFormData: true,
     });

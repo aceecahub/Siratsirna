@@ -62,7 +62,7 @@ const previewLetter = computed(() => ({
     nip_niapd: form.nip_niapd, tanda_tangan: uploads.tanda_tangan, stempel: uploads.stempel,
 }));
 
-function submit() { form.post(route('surat-keterangan-domisili.store'), { preserveScroll: true }); }
+function submit() { form.post(route('surat-keterangan-domisili.store'), { preserveScroll: true, forceFormData: true }); }
 async function printPreview() { await printSheet(); }
 function scrollToPreview() { document.getElementById('live-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 </script>
@@ -133,11 +133,6 @@ function scrollToPreview() { document.getElementById('live-preview')?.scrollInto
                                     <InputLabel value="Kode Pos" />
                                     <input v-model="form.kode_pos" type="text" placeholder="cth. 46463" :class="INPUT_CLASS" />
                                     <InputError class="mt-1" :message="form.errors.kode_pos" />
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <InputLabel value="Alamat Kantor Desa" />
-                                    <textarea v-model="form.alamat" rows="2" placeholder="Jl. Pacihayan No.16 Sirnaputra" :class="INPUT_CLASS" />
-                                    <InputError class="mt-1" :message="form.errors.alamat" />
                                 </div>
                                 <div>
                                     <InputLabel value="Kontak / Telp" />

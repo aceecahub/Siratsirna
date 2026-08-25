@@ -25,7 +25,6 @@ Route::get('/', function () {
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
         'landingSettings' => $settings,
@@ -210,6 +209,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-domisili/buat', [DomicileLetterController::class, 'create'])->name('surat-keterangan-domisili.create');
     Route::post('/surat-keterangan-domisili', [DomicileLetterController::class, 'store'])->name('surat-keterangan-domisili.store');
     Route::get('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'show'])->name('surat-keterangan-domisili.show');
+    Route::get('/surat-keterangan-domisili/{domicileLetter}/edit', [DomicileLetterController::class, 'edit'])->name('surat-keterangan-domisili.edit');
+    Route::post('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'update'])->name('surat-keterangan-domisili.update');
+    Route::put('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'update']);
     Route::delete('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'destroy'])->name('surat-keterangan-domisili.destroy');
 
     // Surat Keterangan Tidak Mampu
@@ -217,6 +219,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-tidak-mampu/buat', [PovertyLetterController::class, 'create'])->name('surat-tidak-mampu.create');
     Route::post('/surat-tidak-mampu', [PovertyLetterController::class, 'store'])->name('surat-tidak-mampu.store');
     Route::get('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'show'])->name('surat-tidak-mampu.show');
+    Route::get('/surat-tidak-mampu/{povertyLetter}/edit', [PovertyLetterController::class, 'edit'])->name('surat-tidak-mampu.edit');
+    Route::post('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'update'])->name('surat-tidak-mampu.update');
+    Route::put('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'update']);
     Route::delete('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'destroy'])->name('surat-tidak-mampu.destroy');
 
     // Surat Keterangan Menikah
@@ -224,6 +229,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-menikah/buat', [MarriageLetterController::class, 'create'])->name('surat-keterangan-menikah.create');
     Route::post('/surat-keterangan-menikah', [MarriageLetterController::class, 'store'])->name('surat-keterangan-menikah.store');
     Route::get('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'show'])->name('surat-keterangan-menikah.show');
+    Route::get('/surat-keterangan-menikah/{marriageLetter}/edit', [MarriageLetterController::class, 'edit'])->name('surat-keterangan-menikah.edit');
+    Route::post('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'update'])->name('surat-keterangan-menikah.update');
+    Route::put('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'update']);
     Route::delete('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'destroy'])->name('surat-keterangan-menikah.destroy');
 
     // Surat Pengantar Pencetakan E-KTP
@@ -231,6 +239,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-pengantar-ktp/buat', [KtpLetterController::class, 'create'])->name('surat-pengantar-ktp.create');
     Route::post('/surat-pengantar-ktp', [KtpLetterController::class, 'store'])->name('surat-pengantar-ktp.store');
     Route::get('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'show'])->name('surat-pengantar-ktp.show');
+    Route::get('/surat-pengantar-ktp/{ktpLetter}/edit', [KtpLetterController::class, 'edit'])->name('surat-pengantar-ktp.edit');
+    Route::post('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'update'])->name('surat-pengantar-ktp.update');
+    Route::put('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'update']);
     Route::delete('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'destroy'])->name('surat-pengantar-ktp.destroy');
 
     // Surat Keterangan Kehilangan
@@ -238,6 +249,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-kehilangan/buat', [LossLetterController::class, 'create'])->name('surat-keterangan-kehilangan.create');
     Route::post('/surat-keterangan-kehilangan', [LossLetterController::class, 'store'])->name('surat-keterangan-kehilangan.store');
     Route::get('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'show'])->name('surat-keterangan-kehilangan.show');
+    Route::get('/surat-keterangan-kehilangan/{lossLetter}/edit', [LossLetterController::class, 'edit'])->name('surat-keterangan-kehilangan.edit');
+    Route::post('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'update'])->name('surat-keterangan-kehilangan.update');
+    Route::put('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'update']);
     Route::delete('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'destroy'])->name('surat-keterangan-kehilangan.destroy');
 
     // Surat Keterangan Penghasilan
@@ -245,6 +259,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-penghasilan/buat', [IncomeLetterController::class, 'create'])->name('surat-keterangan-penghasilan.create');
     Route::post('/surat-keterangan-penghasilan', [IncomeLetterController::class, 'store'])->name('surat-keterangan-penghasilan.store');
     Route::get('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'show'])->name('surat-keterangan-penghasilan.show');
+    Route::get('/surat-keterangan-penghasilan/{incomeLetter}/edit', [IncomeLetterController::class, 'edit'])->name('surat-keterangan-penghasilan.edit');
+    Route::post('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'update'])->name('surat-keterangan-penghasilan.update');
+    Route::put('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'update']);
     Route::delete('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'destroy'])->name('surat-keterangan-penghasilan.destroy');
 
     // Surat Keterangan Ahli Waris Dan Saksi Ahli Waris
@@ -252,6 +269,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-ahli-waris/buat', [HeirLetterController::class, 'create'])->name('surat-ahli-waris.create');
     Route::post('/surat-ahli-waris', [HeirLetterController::class, 'store'])->name('surat-ahli-waris.store');
     Route::get('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'show'])->name('surat-ahli-waris.show');
+    Route::get('/surat-ahli-waris/{heirLetter}/edit', [HeirLetterController::class, 'edit'])->name('surat-ahli-waris.edit');
+    Route::post('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'update'])->name('surat-ahli-waris.update');
+    Route::put('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'update']);
     Route::delete('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'destroy'])->name('surat-ahli-waris.destroy');
 
     // Surat Permohonan Bantuan
@@ -259,6 +279,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-permohonan-bantuan/buat', [AssistanceLetterController::class, 'create'])->name('surat-permohonan-bantuan.create');
     Route::post('/surat-permohonan-bantuan', [AssistanceLetterController::class, 'store'])->name('surat-permohonan-bantuan.store');
     Route::get('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'show'])->name('surat-permohonan-bantuan.show');
+    Route::get('/surat-permohonan-bantuan/{assistanceLetter}/edit', [AssistanceLetterController::class, 'edit'])->name('surat-permohonan-bantuan.edit');
+    Route::post('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'update'])->name('surat-permohonan-bantuan.update');
+    Route::put('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'update']);
     Route::delete('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'destroy'])->name('surat-permohonan-bantuan.destroy');
 
     // CMS Landing Page Settings

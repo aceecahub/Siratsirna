@@ -11,16 +11,16 @@ class StoreKtpLetterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Kop
-            'kabupaten'  => ['required', 'string', 'max:191'],
-            'kecamatan'  => ['required', 'string', 'max:191'],
-            'nama_desa'  => ['required', 'string', 'max:191'],
-            'alamat'     => ['required', 'string'],
+            // Kop — nullable (statis)
+            'kabupaten'  => ['nullable', 'string', 'max:191'],
+            'kecamatan'  => ['nullable', 'string', 'max:191'],
+            'nama_desa'  => ['nullable', 'string', 'max:191'],
+            'alamat'     => ['nullable', 'string'],
             'kode_pos'   => ['nullable', 'string', 'max:10'],
             'kontak'     => ['nullable', 'string', 'max:191'],
             'email_desa' => ['nullable', 'string', 'max:191'],
-            'logo_kiri'  => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
-            'logo_kanan' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
+            'logo_kiri'  => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            'logo_kanan' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
 
             // Surat
             'nomor_surat'   => ['required', 'string', 'max:191'],
@@ -31,7 +31,7 @@ class StoreKtpLetterRequest extends FormRequest
             'nama_warga'        => ['required', 'string', 'max:191'],
             'tempat_lahir'      => ['required', 'string', 'max:191'],
             'tanggal_lahir'     => ['required', 'date'],
-            'warga_negara'      => ['required', 'string', 'max:50'],
+            'warga_negara'      => ['nullable', 'string', 'max:50'],
             'jenis_kelamin'     => ['required', 'string', 'max:20'],
             'agama'             => ['required', 'string', 'max:50'],
             'status_perkawinan' => ['required', 'string', 'max:50'],
@@ -50,8 +50,8 @@ class StoreKtpLetterRequest extends FormRequest
             'jabatan_penandatangan' => ['nullable', 'string', 'max:191'],
             'nama_penandatangan'    => ['nullable', 'string', 'max:191'],
             'nip_niapd'             => ['nullable', 'string', 'max:191'],
-            'tanda_tangan'          => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
-            'stempel'               => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
+            'tanda_tangan'          => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            'stempel'               => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
         ];
     }
 }

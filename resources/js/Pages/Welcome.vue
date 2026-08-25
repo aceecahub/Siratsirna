@@ -8,10 +8,6 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    canRegister: {
-        type: Boolean,
-        default: false,
-    },
     laravelVersion: {
         type: String,
         default: '',

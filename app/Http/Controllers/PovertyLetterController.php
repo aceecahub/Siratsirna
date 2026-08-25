@@ -12,6 +12,14 @@ use Inertia\Response;
 
 class PovertyLetterController extends Controller
 {
+    private const KOP_DEFAULTS = [
+        'kabupaten' => 'Tasikmalaya',
+        'kecamatan' => 'Cigalontang',
+        'nama_desa' => 'Sirnaputra',
+        'alamat'    => 'Jl. Raya Sirnaputra No. 01',
+        'kode_pos'  => '46463',
+    ];
+
     public function index(Request $request): Response
     {
         $query = PovertyLetter::query();
@@ -40,6 +48,13 @@ class PovertyLetterController extends Controller
     {
         $data = $request->validated();
 
+        // Apply static kop defaults
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
+
         // ── Upload kop & watermark ────────────────────────────────
         $topUploads = [
             'logo_kiri'  => $request->file('logo_kiri'),
@@ -53,40 +68,49 @@ class PovertyLetterController extends Controller
             }
         }
 
-        // ── Upload TTD & stempel per signer ───────────────────────
+        // ── Handle tanda tangan (single signer) ─────────────────
+        if ($request->hasFile('tanda_tangan')) {
+            $paths['tanda_tangan_path'] = $request->file('tanda_tangan')->store('surat-tidak-mampu', 'public');
+        }
+
+        // ── Handle penandatangan_list (JSON string dari form) ────
+        $signers = null;
         $signerJson = $request->input('penandatangan_list');
-        $signers    = is_string($signerJson) ? json_decode($signerJson, true) : (array) $signerJson;
+        if ($signerJson) {
+            $signers = is_string($signerJson)
+                ? json_decode($signerJson, true)
+                : (is_array($signerJson) ? $signerJson : null);
+
+            if (is_array($signers)) {
+                $allPaths = array_values(array_filter(array_values($paths)));
+                foreach ($signers as $idx => &$signer) {
+                    $ttdKey = "tanda_tangan_signer_{$idx}";
+                    if ($request->hasFile($ttdKey)) {
+                        $p = $request->file($ttdKey)->store('surat-tidak-mampu', 'public');
+                        $signer['tanda_tangan_path'] = $p;
+                        $allPaths[] = $p;
+                    }
+                    $stempelKey = "stempel_signer_{$idx}";
+                    if ($request->hasFile($stempelKey)) {
+                        $p = $request->file($stempelKey)->store('surat-tidak-mampu', 'public');
+                        $signer['stempel_path'] = $p;
+                        $allPaths[] = $p;
+                    }
+                    unset($signer['tanda_tangan'], $signer['stempel']);
+                }
+                unset($signer);
+            }
+        }
 
         $allPaths = array_values(array_filter(array_values($paths)));
 
-        foreach ($signers as $idx => &$signer) {
-            // tanda_tangan_signer_{idx}
-            $ttdKey = "tanda_tangan_signer_{$idx}";
-            if ($request->hasFile($ttdKey)) {
-                $p = $request->file($ttdKey)->store('surat-tidak-mampu', 'public');
-                $signer['tanda_tangan_path'] = $p;
-                $allPaths[]                  = $p;
-            }
-
-            $stempelKey = "stempel_signer_{$idx}";
-            if ($request->hasFile($stempelKey)) {
-                $p = $request->file($stempelKey)->store('surat-tidak-mampu', 'public');
-                $signer['stempel_path'] = $p;
-                $allPaths[]             = $p;
-            }
-
-            // Hapus field sementara agar tidak disimpan mentah
-            unset($signer['tanda_tangan'], $signer['stempel']);
-        }
-        unset($signer);
-
         try {
-            $letter = PovertyLetter::create([
-                ...$data,
-                ...$paths,
-                'penandatangan_list' => $signers,
-                'created_by'         => $request->user()?->id,
-            ]);
+            $letter = PovertyLetter::create(array_merge(
+                $data,
+                $paths,
+                ['penandatangan_list' => $signers],
+                ['created_by' => $request->user()?->id],
+            ));
         } catch (\Throwable $e) {
             Storage::disk('public')->delete($allPaths);
             throw $e;
@@ -104,12 +128,83 @@ class PovertyLetterController extends Controller
         ]);
     }
 
+    public function edit(PovertyLetter $povertyLetter): Response
+    {
+        return Inertia::render('PovertyLetter/Edit', [
+            'letter' => PovertyLetterResource::make($povertyLetter)->resolve(),
+        ]);
+    }
+
+    public function update(StorePovertyLetterRequest $request, PovertyLetter $povertyLetter)
+    {
+        $data = $request->validated();
+
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $povertyLetter->{$key} ?? $default;
+            }
+        }
+
+        $uploads = [
+            'logo_kiri'  => $request->file('logo_kiri'),
+            'logo_kanan' => $request->file('logo_kanan'),
+            'stempel'    => $request->file('stempel'),
+        ];
+
+        $paths = [];
+
+        foreach ($uploads as $column => $file) {
+            if ($file) {
+                $oldPath = $povertyLetter->{$column . '_path'};
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $paths[$column . '_path'] = $file->store('surat-tidak-mampu', 'public');
+            }
+        }
+
+        if ($request->hasFile('tanda_tangan')) {
+            if ($povertyLetter->tanda_tangan_path) {
+                Storage::disk('public')->delete($povertyLetter->tanda_tangan_path);
+            }
+            $paths['tanda_tangan_path'] = $request->file('tanda_tangan')->store('surat-tidak-mampu', 'public');
+        }
+
+        $signers = $data['penandatangan_list'] ?? null;
+        if ($signers && is_string($signers)) {
+            $signers = json_decode($signers, true);
+        }
+
+        if (is_array($signers)) {
+            $oldSigners = (array) ($povertyLetter->penandatangan_list ?? []);
+            foreach ($signers as $i => &$signer) {
+                $fileTt = $request->file("tanda_tangan_signer_{$i}");
+                if ($fileTt) {
+                    $signer['tanda_tangan_path'] = $fileTt->store('surat-tidak-mampu', 'public');
+                } else {
+                    $signer['tanda_tangan_path'] = $oldSigners[$i]['tanda_tangan_path'] ?? null;
+                }
+                unset($signer['tanda_tangan']);
+            }
+            unset($signer);
+        }
+
+        $povertyLetter->update(array_merge($data, $paths, [
+            'penandatangan_list' => $signers,
+        ]));
+
+        return redirect()
+            ->route('surat-tidak-mampu.show', $povertyLetter)
+            ->with('success', "Surat Keterangan Tidak Mampu atas nama \"{$povertyLetter->nama_warga}\" berhasil diperbarui.");
+    }
+
     public function destroy(PovertyLetter $povertyLetter)
     {
         $files = array_filter([
             $povertyLetter->logo_kiri_path,
             $povertyLetter->logo_kanan_path,
             $povertyLetter->stempel_path,
+            $povertyLetter->tanda_tangan_path,
         ]);
 
         foreach ((array) ($povertyLetter->penandatangan_list ?? []) as $s) {

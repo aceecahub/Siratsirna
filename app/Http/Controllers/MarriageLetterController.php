@@ -12,6 +12,14 @@ use Inertia\Response;
 
 class MarriageLetterController extends Controller
 {
+    private const KOP_DEFAULTS = [
+        'kabupaten' => 'Tasikmalaya',
+        'kecamatan' => 'Cigalontang',
+        'nama_desa' => 'Sirnaputra',
+        'alamat'    => 'Jl. Raya Sirnaputra No. 01',
+        'kode_pos'  => '46463',
+    ];
+
     public function index(Request $request): Response
     {
         $query = MarriageLetter::query();
@@ -40,6 +48,12 @@ class MarriageLetterController extends Controller
     public function store(StoreMarriageLetterRequest $request)
     {
         $data = $request->validated();
+
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
 
         $uploads = [
             'logo_kiri'    => $request->file('logo_kiri'),
@@ -80,6 +94,45 @@ class MarriageLetterController extends Controller
         return Inertia::render('MarriageLetter/Show', [
             'letter' => MarriageLetterResource::make($marriageLetter->load('creator'))->resolve(),
         ]);
+    }
+
+    public function edit(MarriageLetter $marriageLetter): Response
+    {
+        return Inertia::render('MarriageLetter/Edit', [
+            'letter' => MarriageLetterResource::make($marriageLetter)->resolve(),
+        ]);
+    }
+
+    public function update(StoreMarriageLetterRequest $request, MarriageLetter $marriageLetter)
+    {
+        $data = $request->validated();
+
+        $uploads = [
+            'logo_kiri'    => $request->file('logo_kiri'),
+            'logo_kanan'   => $request->file('logo_kanan'),
+            'tanda_tangan' => $request->file('tanda_tangan'),
+            'stempel'      => $request->file('stempel'),
+        ];
+
+        $paths = [];
+        foreach ($uploads as $column => $file) {
+            if ($file) {
+                $oldPath = $marriageLetter->{$column . '_path'};
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $paths[$column . '_path'] = $file->store('surat-keterangan-menikah', 'public');
+            }
+        }
+
+        $marriageLetter->update([
+            ...$data,
+            ...$paths,
+        ]);
+
+        return redirect()
+            ->route('surat-keterangan-menikah.show', $marriageLetter)
+            ->with('success', "Surat Keterangan Menikah atas nama \"{$marriageLetter->nama_pemohon}\" berhasil diperbarui.");
     }
 
     public function destroy(MarriageLetter $marriageLetter)

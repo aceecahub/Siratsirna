@@ -3,43 +3,43 @@
 namespace App\Models;
 
 use Database\Factories\OutgoingMailFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable([
-    'kabupaten',
-    'kecamatan',
-    'nama_desa',
-    'alamat',
-    'kode_pos',
-    'kontak',
-    'email_desa',
-    'logo_kiri_path',
-    'logo_kanan_path',
-    'nomor_surat',
-    'sifat',
-    'lampiran',
-    'perihal',
-    'tanggal_surat',
-    'tujuan',
-    'pembuka',
-    'isi_surat',
-    'penutup',
-    'jabatan_penandatangan',
-    'nama_penandatangan',
-    'nip_niapd',
-    'tanda_tangan_path',
-    'stempel_path',
-    'penandatangan_list',
-    'created_by',
-])]
 class OutgoingMail extends Model
 {
     /** @use HasFactory<OutgoingMailFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'kabupaten',
+        'kecamatan',
+        'nama_desa',
+        'alamat',
+        'kode_pos',
+        'kontak',
+        'email_desa',
+        'logo_kiri_path',
+        'logo_kanan_path',
+        'nomor_surat',
+        'sifat',
+        'lampiran',
+        'perihal',
+        'tanggal_surat',
+        'tujuan',
+        'pembuka',
+        'isi_surat',
+        'penutup',
+        'jabatan_penandatangan',
+        'nama_penandatangan',
+        'nip_niapd',
+        'tanda_tangan_path',
+        'stempel_path',
+        'penandatangan_list',
+        'created_by',
+    ];
 
     public const SIFAT = ['Biasa', 'Penting', 'Rahasia'];
 

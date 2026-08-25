@@ -2,33 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
-#[UseFactory([
-    'kabupaten', 'kecamatan', 'nama_desa', 'alamat', 'kode_pos', 'kontak', 'email_desa',
-    'logo_kiri_path', 'logo_kanan_path',
-    'nomor_surat', 'tanggal_surat',
-    'nama_warga', 'tempat_lahir', 'tanggal_lahir', 'pekerjaan',
-    'alamat_warga', 'rt', 'rw', 'dusun',
-    'keterangan',
-    'penandatangan_list',
-    'stempel_path',
-    'created_by',
-])]
 class PovertyLetter extends Model
 {
     protected $fillable = [
         'kabupaten', 'kecamatan', 'nama_desa', 'alamat', 'kode_pos', 'kontak', 'email_desa',
         'logo_kiri_path', 'logo_kanan_path',
         'nomor_surat', 'tanggal_surat',
-        'nama_warga', 'tempat_lahir', 'tanggal_lahir', 'pekerjaan',
+        'nik', 'nama_warga', 'tempat_lahir', 'tanggal_lahir',
+        'jenis_kelamin', 'warga_negara', 'agama',
+        'pekerjaan',
         'alamat_warga', 'rt', 'rw', 'dusun',
         'keterangan',
         'penandatangan_list',
-        'stempel_path',
+        'jabatan_penandatangan', 'nama_penandatangan', 'nip_niapd',
+        'tanda_tangan_path', 'stempel_path',
         'created_by',
     ];
 
@@ -46,7 +37,6 @@ class PovertyLetter extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // ─── Accessors ─────────────────────────────────────────────────
     public function getLogoKiriUrlAttribute(): ?string
     {
         return $this->logo_kiri_path
@@ -58,6 +48,13 @@ class PovertyLetter extends Model
     {
         return $this->logo_kanan_path
             ? Storage::disk('public')->url($this->logo_kanan_path)
+            : null;
+    }
+
+    public function getTandaTanganUrlAttribute(): ?string
+    {
+        return $this->tanda_tangan_path
+            ? Storage::disk('public')->url($this->tanda_tangan_path)
             : null;
     }
 

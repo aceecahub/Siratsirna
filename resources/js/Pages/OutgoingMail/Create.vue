@@ -236,8 +236,12 @@ const previewLetter = computed(() => ({
 }));
 
 function submit() {
-    form.post(route('surat-keluar.store'), {
+    form.transform((data) => ({
+        ...data,
+        penandatangan_list: JSON.stringify(data.penandatangan_list),
+    })).post(route('surat-keluar.store'), {
         preserveScroll: true,
+        forceFormData: true,
     });
 }
 

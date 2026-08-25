@@ -12,6 +12,14 @@ use Inertia\Response;
 
 class IncomeLetterController extends Controller
 {
+    private const KOP_DEFAULTS = [
+        'kabupaten' => 'Tasikmalaya',
+        'kecamatan' => 'Cigalontang',
+        'nama_desa' => 'Sirnaputra',
+        'alamat'    => 'Jl. Raya Sirnaputra No. 01',
+        'kode_pos'  => '46463',
+    ];
+
     public function index(Request $request): Response
     {
         $query = IncomeLetter::query();
@@ -40,6 +48,14 @@ class IncomeLetterController extends Controller
     public function store(StoreIncomeLetterRequest $request)
     {
         $data = $request->validated();
+        // Apply static kop surat defaults
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
+
+
 
         $uploads = [
             'logo_kiri'    => $request->file('logo_kiri'),
@@ -80,6 +96,45 @@ class IncomeLetterController extends Controller
         return Inertia::render('IncomeLetter/Show', [
             'letter' => IncomeLetterResource::make($incomeLetter->load('creator'))->resolve(),
         ]);
+    }
+
+    public function edit(IncomeLetter $incomeLetter): Response
+    {
+        return Inertia::render('IncomeLetter/Edit', [
+            'letter' => IncomeLetterResource::make($incomeLetter)->resolve(),
+        ]);
+    }
+
+    public function update(StoreIncomeLetterRequest $request, IncomeLetter $incomeLetter)
+    {
+        $data = $request->validated();
+
+        $uploads = [
+            'logo_kiri'    => $request->file('logo_kiri'),
+            'logo_kanan'   => $request->file('logo_kanan'),
+            'tanda_tangan' => $request->file('tanda_tangan'),
+            'stempel'      => $request->file('stempel'),
+        ];
+
+        $paths = [];
+        foreach ($uploads as $column => $file) {
+            if ($file) {
+                $oldPath = $incomeLetter->{$column . '_path'};
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $paths[$column . '_path'] = $file->store('surat-keterangan-penghasilan', 'public');
+            }
+        }
+
+        $incomeLetter->update([
+            ...$data,
+            ...$paths,
+        ]);
+
+        return redirect()
+            ->route('surat-keterangan-penghasilan.show', $incomeLetter)
+            ->with('success', "Surat Keterangan Penghasilan atas nama \"{$incomeLetter->nama_warga}\" berhasil diperbarui.");
     }
 
     public function destroy(IncomeLetter $incomeLetter)
