@@ -292,8 +292,7 @@ const kalimatPenutup = computed(() =>
                     <div class="shrink-0 flex" :style="{ marginTop: compact ? '5mm' : '8mm' }">
                         <!-- Kotak kosong di kiri -->
                         <div class="flex-1 flex items-start justify-start">
-                            <div class="border border-dashed border-gray-300 print:border-gray-300"
-                                :style="{ width: compact ? '60mm' : '68mm', height: compact ? '28mm' : '35mm' }" />
+                            <!-- area kosong untuk TTD kiri -->    
                         </div>
 
                         <!-- Blok TTD kanan -->

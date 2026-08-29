@@ -8,9 +8,6 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
     status: {
         type: String,
     },
@@ -114,7 +111,7 @@ const submit = () => {
                 <InputError class="mt-1.5 text-xs" :message="form.errors.password" />
             </div>
 
-            <!-- Remember & Forgot Password -->
+            <!-- Remember -->
             <div class="flex items-center justify-between pt-1">
                 <label class="flex items-center cursor-pointer">
                     <Checkbox name="remember" v-model:checked="form.remember" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
@@ -122,14 +119,6 @@ const submit = () => {
                         Ingat Saya
                     </span>
                 </label>
-
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline dark:text-emerald-400 dark:hover:text-emerald-300 transition"
-                >
-                    Lupa kata sandi?
-                </Link>
             </div>
 
             <!-- Submit Button -->
