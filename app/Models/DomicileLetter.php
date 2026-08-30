@@ -2,48 +2,48 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable([
-    'kabupaten',
-    'kecamatan',
-    'nama_desa',
-    'alamat',
-    'kode_pos',
-    'kontak',
-    'email_desa',
-    'logo_kiri_path',
-    'logo_kanan_path',
-    'nomor_surat',
-    'tanggal_surat',
-    'nik',
-    'nama_warga',
-    'tempat_lahir',
-    'tanggal_lahir',
-    'jenis_kelamin',
-    'warga_negara',
-    'agama',
-    'pekerjaan',
-    'alamat_warga',
-    'rt',
-    'rw',
-    'dusun',
-    'keterangan_domisili',
-    'catatan_ektp',
-    'jabatan_penandatangan',
-    'nama_penandatangan',
-    'nip_niapd',
-    'tanda_tangan_path',
-    'stempel_path',
-    'created_by',
-])]
 class DomicileLetter extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'kabupaten',
+        'kecamatan',
+        'nama_desa',
+        'alamat',
+        'kode_pos',
+        'kontak',
+        'email_desa',
+        'logo_kiri_path',
+        'logo_kanan_path',
+        'nomor_surat',
+        'tanggal_surat',
+        'nik',
+        'nama_warga',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'warga_negara',
+        'agama',
+        'pekerjaan',
+        'alamat_warga',
+        'rt',
+        'rw',
+        'dusun',
+        'keterangan_domisili',
+        'catatan_ektp',
+        'jabatan_penandatangan',
+        'nama_penandatangan',
+        'nip_niapd',
+        'tanda_tangan_path',
+        'stempel_path',
+        'created_by',
+    ];
 
     protected function casts(): array
     {

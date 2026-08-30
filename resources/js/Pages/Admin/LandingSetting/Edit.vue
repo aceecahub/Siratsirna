@@ -152,9 +152,9 @@ const submit = () => {
                     @click="activeTab = 'hero'"
                     :class="[
                         activeTab === 'hero'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     🌟 Hero & Identitas
@@ -165,9 +165,9 @@ const submit = () => {
                     @click="activeTab = 'kades'"
                     :class="[
                         activeTab === 'kades'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     👨‍💼 Sambutan Kades
@@ -178,9 +178,9 @@ const submit = () => {
                     @click="activeTab = 'stats'"
                     :class="[
                         activeTab === 'stats'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     📊 Demografi
@@ -191,9 +191,9 @@ const submit = () => {
                     @click="activeTab = 'services'"
                     :class="[
                         activeTab === 'services'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     📝 Kartu Layanan ({{ form.services.length }})
@@ -204,9 +204,9 @@ const submit = () => {
                     @click="activeTab = 'potentials'"
                     :class="[
                         activeTab === 'potentials'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     🌾 Potensi Desa ({{ form.potentials.length }})
@@ -217,9 +217,9 @@ const submit = () => {
                     @click="activeTab = 'news'"
                     :class="[
                         activeTab === 'news'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     📰 Berita Desa ({{ form.news.length }})
@@ -230,9 +230,9 @@ const submit = () => {
                     @click="activeTab = 'officers'"
                     :class="[
                         activeTab === 'officers'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     👔 Perangkat Desa ({{ form.officers.length }})
@@ -243,9 +243,9 @@ const submit = () => {
                     @click="activeTab = 'contact'"
                     :class="[
                         activeTab === 'contact'
-                            ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                            ? 'bg-primary text-white font-semibold shadow-sm shadow-primary/20'
                             : 'bg-white text-slate-600 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 font-semibold',
-                        'inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs transition select-none shrink-0 cursor-pointer'
+                        'inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs transition select-none shrink-0 cursor-pointer'
                     ]"
                 >
                     📍 Kontak & Peta
@@ -255,8 +255,8 @@ const submit = () => {
             <!-- Form Content Wrapper -->
             <form @submit.prevent="submit" class="space-y-6">
                 <!-- TAB 1: HERO & GENERAL -->
-                <div v-show="activeTab === 'hero'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">Identitas & Hero Section</h3>
+                <div v-show="activeTab === 'hero'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Identitas & Hero Section</h3>
 
                     <div class="grid sm:grid-cols-3 gap-4">
                         <div>
@@ -288,7 +288,7 @@ const submit = () => {
                         <textarea
                             v-model="form.hero_subtitle"
                             rows="3"
-                            class="mt-1 block w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                            class="mt-1 block w-full rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                         ></textarea>
                     </div>
 
@@ -298,15 +298,15 @@ const submit = () => {
                             type="file"
                             @change="form.hero_image_file = $event.target.files[0]"
                             accept="image/*"
-                            class="mt-1.5 block w-full text-xs text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-emerald-50 file:px-4 file:py-2 file:text-xs file:font-bold file:text-emerald-700 hover:file:bg-emerald-100"
+                            class="mt-1.5 block w-full cursor-pointer rounded-lg border border-dashed border-slate-200 bg-slate-50 p-2 text-xs text-slate-500 file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-[11px] file:font-semibold file:text-white hover:file:bg-primary/90 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
                         />
                         <p class="mt-1 text-[11px] text-slate-500">Foto landscape pedesaan / ikonik desa. Format: PNG, JPG, WEBP.</p>
                     </div>
                 </div>
 
                 <!-- TAB 2: SAMBUTAN KADES -->
-                <div v-show="activeTab === 'kades'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">Sambutan Kepala Desa & Visi Misi</h3>
+                <div v-show="activeTab === 'kades'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Sambutan Kepala Desa & Visi Misi</h3>
 
                     <div class="grid sm:grid-cols-3 gap-4">
                         <div>
@@ -328,7 +328,7 @@ const submit = () => {
                         <textarea
                             v-model="form.kades_speech"
                             rows="4"
-                            class="mt-1 block w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                            class="mt-1 block w-full rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                         ></textarea>
                     </div>
 
@@ -338,14 +338,14 @@ const submit = () => {
                             type="file"
                             @change="form.kades_photo_file = $event.target.files[0]"
                             accept="image/*"
-                            class="mt-1.5 block w-full text-xs text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-emerald-50 file:px-4 file:py-2 file:text-xs file:font-bold file:text-emerald-700 hover:file:bg-emerald-100"
+                            class="mt-1.5 block w-full cursor-pointer rounded-lg border border-dashed border-slate-200 bg-slate-50 p-2 text-xs text-slate-500 file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-[11px] file:font-semibold file:text-white hover:file:bg-primary/90 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
                         />
                     </div>
                 </div>
 
                 <!-- TAB 3: STATISTIK DEMOGRAFI -->
-                <div v-show="activeTab === 'stats'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">Statistik Demografi Desa</h3>
+                <div v-show="activeTab === 'stats'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Statistik Demografi Desa</h3>
 
                     <div class="grid sm:grid-cols-4 gap-4">
                         <div>
@@ -368,20 +368,20 @@ const submit = () => {
                 </div>
 
                 <!-- TAB 4: KARTU LAYANAN -->
-                <div v-show="activeTab === 'services'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                <div v-show="activeTab === 'services'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-black text-slate-900 dark:text-white">Kelola Kartu Layanan Digital</h3>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Kelola Kartu Layanan Digital</h3>
                         <button
                             type="button"
                             @click="addServiceItem"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-emerald-500 transition"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/90 transition"
                         >
                             + Tambah Layanan
                         </button>
                     </div>
 
                     <div class="grid gap-4 sm:grid-cols-2">
-                        <div v-for="(item, idx) in form.services" :key="idx" class="rounded-2xl border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-950/50 space-y-3">
+                        <div v-for="(item, idx) in form.services" :key="idx" class="rounded-lg border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-800/30 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-extrabold text-emerald-600">Layanan #{{ idx + 1 }}</span>
                                 <button type="button" @click="removeServiceItem(idx)" class="text-xs font-bold text-rose-500 hover:underline">Hapus</button>
@@ -409,20 +409,20 @@ const submit = () => {
                 </div>
 
                 <!-- TAB 5: POTENSI DESA -->
-                <div v-show="activeTab === 'potentials'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                <div v-show="activeTab === 'potentials'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-black text-slate-900 dark:text-white">Kelola Potensi & Komoditas Desa</h3>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Kelola Potensi & Komoditas Desa</h3>
                         <button
                             type="button"
                             @click="addPotentialItem"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-emerald-500 transition"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/90 transition"
                         >
                             + Tambah Potensi
                         </button>
                     </div>
 
                     <div class="grid gap-4 sm:grid-cols-2">
-                        <div v-for="(item, idx) in form.potentials" :key="idx" class="rounded-2xl border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-950/50 space-y-3">
+                        <div v-for="(item, idx) in form.potentials" :key="idx" class="rounded-lg border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-800/30 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-extrabold text-emerald-600">Potensi #{{ idx + 1 }}</span>
                                 <button type="button" @click="removePotentialItem(idx)" class="text-xs font-bold text-rose-500 hover:underline">Hapus</button>
@@ -450,20 +450,20 @@ const submit = () => {
                 </div>
 
                 <!-- TAB 6: BERITA DESA -->
-                <div v-show="activeTab === 'news'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                <div v-show="activeTab === 'news'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-black text-slate-900 dark:text-white">Kelola Berita & Warta Terkini</h3>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Kelola Berita & Warta Terkini</h3>
                         <button
                             type="button"
                             @click="addNewsItem"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-emerald-500 transition"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/90 transition"
                         >
                             + Tambah Warta
                         </button>
                     </div>
 
                     <div class="grid gap-4 sm:grid-cols-2">
-                        <div v-for="(item, idx) in form.news" :key="idx" class="rounded-2xl border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-950/50 space-y-3">
+                        <div v-for="(item, idx) in form.news" :key="idx" class="rounded-lg border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-800/30 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-extrabold text-emerald-600">Berita #{{ idx + 1 }}</span>
                                 <button type="button" @click="removeNewsItem(idx)" class="text-xs font-bold text-rose-500 hover:underline">Hapus</button>
@@ -487,7 +487,7 @@ const submit = () => {
                                 <textarea
                                     v-model="item.excerpt"
                                     rows="2"
-                                    class="mt-1 block w-full rounded-xl border border-slate-200 bg-white p-2 text-xs dark:border-slate-800 dark:bg-slate-950"
+                                    class="mt-1 block w-full rounded-lg border border-slate-200 bg-white p-2 text-xs focus:border-primary dark:border-slate-700 dark:bg-slate-800"
                                 ></textarea>
                             </div>
                         </div>
@@ -495,20 +495,20 @@ const submit = () => {
                 </div>
 
                 <!-- TAB 7: PERANGKAT DESA -->
-                <div v-show="activeTab === 'officers'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                <div v-show="activeTab === 'officers'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-black text-slate-900 dark:text-white">Kelola Perangkat / Pamong Desa</h3>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Kelola Perangkat / Pamong Desa</h3>
                         <button
                             type="button"
                             @click="addOfficerItem"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-emerald-500 transition"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/90 transition"
                         >
                             + Tambah Perangkat
                         </button>
                     </div>
 
                     <div class="grid gap-4 sm:grid-cols-3">
-                        <div v-for="(item, idx) in form.officers" :key="idx" class="rounded-2xl border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-950/50 space-y-3">
+                        <div v-for="(item, idx) in form.officers" :key="idx" class="rounded-lg border border-slate-200 p-4 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-800/30 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-extrabold text-emerald-600">Aparatur #{{ idx + 1 }}</span>
                                 <button type="button" @click="removeOfficerItem(idx)" class="text-xs font-bold text-rose-500 hover:underline">Hapus</button>
@@ -526,8 +526,8 @@ const submit = () => {
                 </div>
 
                 <!-- TAB 8: KONTAK & PETA -->
-                <div v-show="activeTab === 'contact'" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">Informasi Balai Desa & Kontak</h3>
+                <div v-show="activeTab === 'contact'" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-5">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Informasi Balai Desa & Kontak</h3>
 
                     <div>
                         <InputLabel value="Alamat Lengkap Kantor Desa" class="text-xs font-bold" />
@@ -550,7 +550,7 @@ const submit = () => {
                         <textarea
                             v-model="form.contact_hours"
                             rows="2"
-                            class="mt-1 block w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                            class="mt-1 block w-full rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs focus:border-primary dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                         ></textarea>
                     </div>
 
@@ -565,26 +565,26 @@ const submit = () => {
                             type="file"
                             @change="form.balai_desa_photo_file = $event.target.files[0]"
                             accept="image/*"
-                            class="mt-1.5 block w-full text-xs text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-emerald-50 file:px-4 file:py-2 file:text-xs file:font-bold file:text-emerald-700 hover:file:bg-emerald-100"
+                            class="mt-1.5 block w-full cursor-pointer rounded-lg border border-dashed border-slate-200 bg-slate-50 p-2 text-xs text-slate-500 file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-[11px] file:font-semibold file:text-white hover:file:bg-primary/90 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
                         />
                     </div>
                 </div>
 
                 <!-- Floating Bottom Action Bar -->
-                <div class="sticky bottom-4 z-30 flex items-center justify-between rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-xl backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90">
+                <div class="sticky bottom-4 z-30 flex items-center justify-between rounded-xl border border-slate-200 bg-white/95 p-4 shadow-lg backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/95">
                     <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
                         Pastikan seluruh data yang diisi telah sesuai sebelum menyimpan.
                     </p>
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:from-emerald-500 hover:to-teal-500 active:scale-95 disabled:opacity-50 transition cursor-pointer"
+                        class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-primary/90 active:scale-95 disabled:opacity-50 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40"
                     >
                         <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        💾 Simpan Perubahan Landing Page
+                        Simpan Perubahan Landing Page
                     </button>
                 </div>
             </form>

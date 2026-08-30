@@ -11,16 +11,16 @@ class StoreMarriageLetterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Kop
-            'kabupaten'  => ['required', 'string', 'max:191'],
-            'kecamatan'  => ['required', 'string', 'max:191'],
-            'nama_desa'  => ['required', 'string', 'max:191'],
-            'alamat'     => ['required', 'string'],
+            // Kop — nullable (statis)
+            'kabupaten'  => ['nullable', 'string', 'max:191'],
+            'kecamatan'  => ['nullable', 'string', 'max:191'],
+            'nama_desa'  => ['nullable', 'string', 'max:191'],
+            'alamat'     => ['nullable', 'string'],
             'kode_pos'   => ['nullable', 'string', 'max:10'],
             'kontak'     => ['nullable', 'string', 'max:191'],
             'email_desa' => ['nullable', 'string', 'max:191'],
-            'logo_kiri'  => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
-            'logo_kanan' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
+            'logo_kiri'  => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            'logo_kanan' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
 
             // Surat
             'nomor_surat'   => ['required', 'string', 'max:191'],
@@ -37,7 +37,7 @@ class StoreMarriageLetterRequest extends FormRequest
             'dusun'         => ['nullable', 'string', 'max:191'],
 
             // Nikah
-            'jenis_nikah'      => ['required', 'string', 'max:100'],
+            'jenis_nikah'      => ['nullable', 'string', 'max:100'],
             'hari_nikah'       => ['nullable', 'string', 'max:50'],
             'tanggal_nikah'    => ['required', 'date'],
             'keterangan_nikah' => ['nullable', 'string'],
@@ -56,8 +56,8 @@ class StoreMarriageLetterRequest extends FormRequest
             'jabatan_penandatangan' => ['nullable', 'string', 'max:191'],
             'nama_penandatangan'    => ['nullable', 'string', 'max:191'],
             'nip_niapd'             => ['nullable', 'string', 'max:191'],
-            'tanda_tangan'          => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
-            'stempel'               => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5120'],
+            'tanda_tangan'          => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            'stempel'               => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
         ];
     }
 }

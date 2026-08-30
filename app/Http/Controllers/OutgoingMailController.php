@@ -12,6 +12,14 @@ use Inertia\Response;
 
 class OutgoingMailController extends Controller
 {
+    private const KOP_DEFAULTS = [
+        'kabupaten' => 'Tasikmalaya',
+        'kecamatan' => 'Cigalontang',
+        'nama_desa' => 'Sirnaputra',
+        'alamat'    => 'Jl. Raya Sirnaputra No. 01',
+        'kode_pos'  => '46463',
+    ];
+
     /**
      * Display a paginated listing of generated outgoing mails.
      */
@@ -54,6 +62,12 @@ class OutgoingMailController extends Controller
     public function store(StoreOutgoingMailRequest $request)
     {
         $data = $request->validated();
+
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
 
         $uploads = [
             'logo_kiri' => $request->file('logo_kiri'),

@@ -12,9 +12,20 @@ use Inertia\Response;
 
 class DomicileLetterController extends Controller
 {
-    /**
-     * Display a paginated listing of domicile letters.
-     */
+    // Default static values for village header
+    private const KOP_DEFAULTS = [
+        'kabupaten' => 'Tasikmalaya',
+        'kecamatan' => 'Cigalontang',
+        'nama_desa' => 'Sirnaputra',
+        'alamat'    => 'Jl. Raya Sirnaputra No. 01',
+        'kode_pos'  => '46463',
+    ];
+
+    private const TTD_DEFAULTS = [
+        'jabatan_penandatangan' => 'Kepala Desa',
+        'nama_penandatangan'    => 'H. AHMAD SUPRIATNA',
+    ];
+
     public function index(Request $request): Response
     {
         $query = DomicileLetter::query();
@@ -38,26 +49,32 @@ class DomicileLetterController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new domicile letter.
-     */
     public function create(): Response
     {
         return Inertia::render('DomicileLetter/Create');
     }
 
-    /**
-     * Store a newly created domicile letter.
-     */
     public function store(StoreDomicileLetterRequest $request)
     {
         $data = $request->validated();
 
+        // Apply static defaults for kop surat fields that aren't filled
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
+        foreach (self::TTD_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
+
         $uploads = [
-            'logo_kiri'   => $request->file('logo_kiri'),
-            'logo_kanan'  => $request->file('logo_kanan'),
+            'logo_kiri'    => $request->file('logo_kiri'),
+            'logo_kanan'   => $request->file('logo_kanan'),
             'tanda_tangan' => $request->file('tanda_tangan'),
-            'stempel'     => $request->file('stempel'),
+            'stempel'      => $request->file('stempel'),
         ];
 
         $paths = [];
@@ -89,9 +106,6 @@ class DomicileLetterController extends Controller
             ->with('success', "Surat Keterangan Domisili atas nama \"{$letter->nama_warga}\" berhasil dibuat dan siap dicetak.");
     }
 
-    /**
-     * Display a single domicile letter ready for print / export.
-     */
     public function show(DomicileLetter $domicileLetter): Response
     {
         return Inertia::render('DomicileLetter/Show', [
@@ -99,9 +113,52 @@ class DomicileLetterController extends Controller
         ]);
     }
 
-    /**
-     * Remove a domicile letter and its stored assets.
-     */
+    public function edit(DomicileLetter $domicileLetter): Response
+    {
+        return Inertia::render('DomicileLetter/Edit', [
+            'letter' => DomicileLetterResource::make($domicileLetter)->resolve(),
+        ]);
+    }
+
+    public function update(StoreDomicileLetterRequest $request, DomicileLetter $domicileLetter)
+    {
+        $data = $request->validated();
+
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $domicileLetter->{$key} ?? $default;
+            }
+        }
+
+        $uploads = [
+            'logo_kiri'    => $request->file('logo_kiri'),
+            'logo_kanan'   => $request->file('logo_kanan'),
+            'tanda_tangan' => $request->file('tanda_tangan'),
+            'stempel'      => $request->file('stempel'),
+        ];
+
+        $paths = [];
+
+        foreach ($uploads as $column => $file) {
+            if ($file) {
+                $oldPath = $domicileLetter->{$column . '_path'};
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $paths[$column . '_path'] = $file->store('surat-keterangan-domisili', 'public');
+            }
+        }
+
+        $domicileLetter->update([
+            ...$data,
+            ...$paths,
+        ]);
+
+        return redirect()
+            ->route('surat-keterangan-domisili.show', $domicileLetter)
+            ->with('success', "Surat Keterangan Domisili atas nama \"{$domicileLetter->nama_warga}\" berhasil diperbarui.");
+    }
+
     public function destroy(DomicileLetter $domicileLetter)
     {
         $files = array_filter([

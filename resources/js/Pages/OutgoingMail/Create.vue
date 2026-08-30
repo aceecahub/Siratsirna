@@ -17,9 +17,9 @@ const props = defineProps({
 });
 
 const form = useForm({
-    kabupaten: '',
-    kecamatan: '',
-    nama_desa: '',
+    kabupaten:  'Tasikmalaya',
+    kecamatan:  'Cigalontang',
+    nama_desa:  'Sirnaputra',
     alamat: '',
     kode_pos: '',
     kontak: '',
@@ -58,20 +58,20 @@ const form = useForm({
 });
 
 const uploads = {
-    logo_kiri: null,
+    logo_kiri: '/images/logo-tasikmalaya.png',
     logo_kanan: null,
     tanda_tangan: null,
     stempel: null,
 };
 
 const INPUT_CLASS =
-    'mt-1.5 block w-full rounded-xl border-slate-300/90 text-xs font-medium shadow-sm transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700/80 dark:bg-slate-900 dark:text-slate-200 dark:focus:border-emerald-500';
+    'mt-1 block w-full rounded-lg border-slate-200 bg-white text-xs font-medium shadow-sm transition focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-primary';
 
 const SECTION_CLASS =
-    'rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/90 transition hover:border-slate-300/80 dark:hover:border-slate-700/80';
+    'rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden';
 
 const SECTION_TITLE_CLASS =
-    'mb-5 flex items-center gap-2.5 border-b border-slate-100 pb-3 text-xs font-black uppercase tracking-wider text-slate-800 dark:border-slate-800 dark:text-slate-200';
+    'flex items-center gap-2.5 border-b border-slate-100 dark:border-slate-800 px-5 py-3.5 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide';
 
 function readAsDataUrl(file) {
     return new Promise((resolve) => {
@@ -236,8 +236,12 @@ const previewLetter = computed(() => ({
 }));
 
 function submit() {
-    form.post(route('surat-keluar.store'), {
+    form.transform((data) => ({
+        ...data,
+        penandatangan_list: JSON.stringify(data.penandatangan_list),
+    })).post(route('surat-keluar.store'), {
         preserveScroll: true,
+        forceFormData: true,
     });
 }
 
@@ -272,7 +276,7 @@ function filePreviewUrl(field) {
                     <!-- ===================== FORM ===================== -->
                     <div class="space-y-6 print:hidden">
                         <!-- Kop Surat -->
-                        <section :class="SECTION_CLASS">
+                        <section :class="SECTION_CLASS" style="display: none;">
                             <h3 :class="SECTION_TITLE_CLASS">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

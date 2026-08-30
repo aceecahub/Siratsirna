@@ -12,6 +12,14 @@ use Inertia\Response;
 
 class HeirLetterController extends Controller
 {
+    private const KOP_DEFAULTS = [
+        'kabupaten' => 'Tasikmalaya',
+        'kecamatan' => 'Cigalontang',
+        'nama_desa' => 'Sirnaputra',
+        'alamat'    => 'Jl. Raya Sirnaputra No. 01',
+        'kode_pos'  => '46463',
+    ];
+
     public function index(Request $request): Response
     {
         $query = HeirLetter::query();
@@ -40,6 +48,14 @@ class HeirLetterController extends Controller
     public function store(StoreHeirLetterRequest $request)
     {
         $data = $request->validated();
+        // Apply static kop surat defaults
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
+
+
 
         // Decode JSON arrays
         $ahliWarisList = is_string($data['ahli_waris_list'])
@@ -91,6 +107,47 @@ class HeirLetterController extends Controller
         return Inertia::render('HeirLetter/Show', [
             'letter' => HeirLetterResource::make($heirLetter->load('creator'))->resolve(),
         ]);
+    }
+
+    public function edit(HeirLetter $heirLetter): Response
+    {
+        return Inertia::render('HeirLetter/Edit', [
+            'letter' => HeirLetterResource::make($heirLetter)->resolve(),
+        ]);
+    }
+
+    public function update(StoreHeirLetterRequest $request, HeirLetter $heirLetter)
+    {
+        $data = $request->validated();
+
+        $uploads = [
+            'logo_kiri'    => $request->file('logo_kiri'),
+            'logo_kanan'   => $request->file('logo_kanan'),
+            'tanda_tangan' => $request->file('tanda_tangan'),
+            'stempel'      => $request->file('stempel'),
+        ];
+
+        $paths = [];
+        foreach ($uploads as $column => $file) {
+            if ($file) {
+                $oldPath = $heirLetter->{$column . '_path'};
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $paths[$column . '_path'] = $file->store('surat-ahli-waris', 'public');
+            }
+        }
+
+        $heirLetter->update([
+            ...$data,
+            'ahli_waris_list' => $data['ahli_waris_list'] ?? [],
+            'saksi_list'      => $data['saksi_list'] ?? [],
+            ...$paths,
+        ]);
+
+        return redirect()
+            ->route('surat-ahli-waris.show', $heirLetter)
+            ->with('success', "Surat Keterangan Ahli Waris Almarhum \"{$heirLetter->nama_almarhum}\" berhasil diperbarui.");
     }
 
     public function destroy(HeirLetter $heirLetter)

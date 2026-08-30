@@ -12,6 +12,14 @@ use Inertia\Response;
 
 class LossLetterController extends Controller
 {
+    private const KOP_DEFAULTS = [
+        'kabupaten' => 'Tasikmalaya',
+        'kecamatan' => 'Cigalontang',
+        'nama_desa' => 'Sirnaputra',
+        'alamat'    => 'Jl. Raya Sirnaputra No. 01',
+        'kode_pos'  => '46463',
+    ];
+
     public function index(Request $request): Response
     {
         $query = LossLetter::query();
@@ -40,6 +48,14 @@ class LossLetterController extends Controller
     public function store(StoreLossLetterRequest $request)
     {
         $data = $request->validated();
+        // Apply static kop surat defaults
+        foreach (self::KOP_DEFAULTS as $key => $default) {
+            if (empty($data[$key])) {
+                $data[$key] = $default;
+            }
+        }
+
+
 
         $uploads = [
             'logo_kiri'    => $request->file('logo_kiri'),
@@ -80,6 +96,45 @@ class LossLetterController extends Controller
         return Inertia::render('LossLetter/Show', [
             'letter' => LossLetterResource::make($lossLetter->load('creator'))->resolve(),
         ]);
+    }
+
+    public function edit(LossLetter $lossLetter): Response
+    {
+        return Inertia::render('LossLetter/Edit', [
+            'letter' => LossLetterResource::make($lossLetter)->resolve(),
+        ]);
+    }
+
+    public function update(StoreLossLetterRequest $request, LossLetter $lossLetter)
+    {
+        $data = $request->validated();
+
+        $uploads = [
+            'logo_kiri'    => $request->file('logo_kiri'),
+            'logo_kanan'   => $request->file('logo_kanan'),
+            'tanda_tangan' => $request->file('tanda_tangan'),
+            'stempel'      => $request->file('stempel'),
+        ];
+
+        $paths = [];
+        foreach ($uploads as $column => $file) {
+            if ($file) {
+                $oldPath = $lossLetter->{$column . '_path'};
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $paths[$column . '_path'] = $file->store('surat-keterangan-kehilangan', 'public');
+            }
+        }
+
+        $lossLetter->update([
+            ...$data,
+            ...$paths,
+        ]);
+
+        return redirect()
+            ->route('surat-keterangan-kehilangan.show', $lossLetter)
+            ->with('success', "Surat Keterangan Kehilangan atas nama \"{$lossLetter->nama_warga}\" berhasil diperbarui.");
     }
 
     public function destroy(LossLetter $lossLetter)

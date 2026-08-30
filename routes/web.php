@@ -25,7 +25,6 @@ Route::get('/', function () {
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
         'landingSettings' => $settings,
@@ -88,14 +87,14 @@ Route::get('/dashboard', function () {
 
     // Breakdown for Donut Chart (Jenis Surat Keterangan)
     $breakdownStats = [
-        'Domisili' => \App\Models\DomicileLetter::count(),
-        'SKTM' => \App\Models\PovertyLetter::count(),
-        'Nikah' => \App\Models\MarriageLetter::count(),
-        'E-KTP' => \App\Models\KtpLetter::count(),
+        'Domisili'   => \App\Models\DomicileLetter::count(),
+        'SKTM'       => \App\Models\PovertyLetter::count(),
+        'Nikah'      => \App\Models\MarriageLetter::count(),
+        'E-KTP'      => \App\Models\KtpLetter::count(),
         'Kehilangan' => \App\Models\LossLetter::count(),
-        'Penghasilan' => \App\Models\IncomeLetter::count(),
+        'Penghasilan'=> \App\Models\IncomeLetter::count(),
         'Ahli Waris' => \App\Models\HeirLetter::count(),
-        'Bantuan' => \App\Models\AssistanceLetter::count(),
+        'Bantuan'    => \App\Models\AssistanceLetter::count(),
     ];
 
     $breakdownChartData = [
@@ -106,14 +105,14 @@ Route::get('/dashboard', function () {
     // Stacked Bar Chart for Monthly Breakdown of 8 Letters
     $stackedCategories = $chartCategories;
     $modelsMap = [
-        'Domisili' => \App\Models\DomicileLetter::class,
-        'SKTM' => \App\Models\PovertyLetter::class,
-        'Nikah' => \App\Models\MarriageLetter::class,
-        'E-KTP' => \App\Models\KtpLetter::class,
+        'Domisili'   => \App\Models\DomicileLetter::class,
+        'SKTM'       => \App\Models\PovertyLetter::class,
+        'Nikah'      => \App\Models\MarriageLetter::class,
+        'E-KTP'      => \App\Models\KtpLetter::class,
         'Kehilangan' => \App\Models\LossLetter::class,
-        'Penghasilan' => \App\Models\IncomeLetter::class,
+        'Penghasilan'=> \App\Models\IncomeLetter::class,
         'Ahli Waris' => \App\Models\HeirLetter::class,
-        'Bantuan' => \App\Models\AssistanceLetter::class,
+        'Bantuan'    => \App\Models\AssistanceLetter::class,
     ];
     
     $stackedSeries = [];
@@ -131,32 +130,63 @@ Route::get('/dashboard', function () {
 
     $stackedChartData = [
         'categories' => $stackedCategories,
-        'series' => $stackedSeries
+        'series'     => $stackedSeries
     ];
 
     $totalSuratKeterangan = array_sum($breakdownStats);
 
+    // Stats per jenis surat keterangan bulan ini
+    $keteranganBulanIni = [
+        'Domisili'   => \App\Models\DomicileLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'SKTM'       => \App\Models\PovertyLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Nikah'      => \App\Models\MarriageLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'E-KTP'      => \App\Models\KtpLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Kehilangan' => \App\Models\LossLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Penghasilan'=> \App\Models\IncomeLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Ahli Waris' => \App\Models\HeirLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+        'Bantuan'    => \App\Models\AssistanceLetter::whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->count(),
+    ];
+
+    $suratKeteranganBulanIni = array_sum($keteranganBulanIni);
+
+    // 5 surat keterangan terbaru (gabungan semua jenis)
+    $recentLetters = collect([
+        ...\App\Models\DomicileLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Domisili', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-domisili']),
+        ...\App\Models\PovertyLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'SKTM', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-tidak-mampu']),
+        ...\App\Models\MarriageLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Nikah', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-menikah']),
+        ...\App\Models\KtpLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'E-KTP', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-pengantar-ktp']),
+        ...\App\Models\LossLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Kehilangan', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-kehilangan']),
+        ...\App\Models\IncomeLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Penghasilan', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-keterangan-penghasilan']),
+        ...\App\Models\HeirLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Ahli Waris', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-ahli-waris']),
+        ...\App\Models\AssistanceLetter::latest()->take(5)->get()->map(fn($r) => ['jenis' => 'Bantuan', 'nama' => $r->nama ?? '-', 'created_at' => $r->created_at, 'route' => 'surat-permohonan-bantuan']),
+    ])->sortByDesc('created_at')->take(5)->values()->toArray();
+
     return Inertia::render('Dashboard', [
         'stats' => [
-            'totalSuratMasuk' => \App\Models\IncomingMail::count(),
-            'totalSuratKeluar' => \App\Models\OutgoingMail::count(),
-            'totalSuratKeterangan' => $totalSuratKeterangan,
-            'suratMasukBulanIni' => \App\Models\IncomingMail::whereYear('tanggal_diterima', $now->year)
+            'totalSuratMasuk'         => \App\Models\IncomingMail::count(),
+            'totalSuratKeluar'        => \App\Models\OutgoingMail::count(),
+            'totalSuratKeterangan'    => $totalSuratKeterangan,
+            'suratMasukBulanIni'      => \App\Models\IncomingMail::whereYear('tanggal_diterima', $now->year)
                 ->whereMonth('tanggal_diterima', $now->month)
                 ->count(),
-            'suratKeluarBulanIni' => \App\Models\OutgoingMail::whereYear('tanggal_surat', $now->year)
+            'suratKeluarBulanIni'     => \App\Models\OutgoingMail::whereYear('tanggal_surat', $now->year)
                 ->whereMonth('tanggal_surat', $now->month)
                 ->count(),
-            'breakdown' => $breakdownStats,
+            'suratKeteranganBulanIni' => $suratKeteranganBulanIni,
+            'totalSemuaSurat'         => \App\Models\IncomingMail::count() + \App\Models\OutgoingMail::count() + $totalSuratKeterangan,
+            'breakdown'               => $breakdownStats,
+            'keteranganBulanIni'      => $keteranganBulanIni,
         ],
-        'recentOutgoing' => \App\Http\Resources\OutgoingMailResource::collection(
+        'recentOutgoing'     => \App\Http\Resources\OutgoingMailResource::collection(
             \App\Models\OutgoingMail::latest()->take(5)->get()
         ),
-        'recentIncoming' => \App\Models\IncomingMail::latest()->take(5)->get(),
-        'chartData' => $chartData,
+        'recentIncoming'     => \App\Models\IncomingMail::latest()->take(5)->get(),
+        'recentLetters'      => $recentLetters,
+        'chartData'          => $chartData,
         'breakdownChartData' => $breakdownChartData,
+        'stackedChartData'   => $stackedChartData,
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -179,6 +209,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-domisili/buat', [DomicileLetterController::class, 'create'])->name('surat-keterangan-domisili.create');
     Route::post('/surat-keterangan-domisili', [DomicileLetterController::class, 'store'])->name('surat-keterangan-domisili.store');
     Route::get('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'show'])->name('surat-keterangan-domisili.show');
+    Route::get('/surat-keterangan-domisili/{domicileLetter}/edit', [DomicileLetterController::class, 'edit'])->name('surat-keterangan-domisili.edit');
+    Route::post('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'update'])->name('surat-keterangan-domisili.update');
+    Route::put('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'update']);
     Route::delete('/surat-keterangan-domisili/{domicileLetter}', [DomicileLetterController::class, 'destroy'])->name('surat-keterangan-domisili.destroy');
 
     // Surat Keterangan Tidak Mampu
@@ -186,6 +219,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-tidak-mampu/buat', [PovertyLetterController::class, 'create'])->name('surat-tidak-mampu.create');
     Route::post('/surat-tidak-mampu', [PovertyLetterController::class, 'store'])->name('surat-tidak-mampu.store');
     Route::get('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'show'])->name('surat-tidak-mampu.show');
+    Route::get('/surat-tidak-mampu/{povertyLetter}/edit', [PovertyLetterController::class, 'edit'])->name('surat-tidak-mampu.edit');
+    Route::post('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'update'])->name('surat-tidak-mampu.update');
+    Route::put('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'update']);
     Route::delete('/surat-tidak-mampu/{povertyLetter}', [PovertyLetterController::class, 'destroy'])->name('surat-tidak-mampu.destroy');
 
     // Surat Keterangan Menikah
@@ -193,6 +229,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-menikah/buat', [MarriageLetterController::class, 'create'])->name('surat-keterangan-menikah.create');
     Route::post('/surat-keterangan-menikah', [MarriageLetterController::class, 'store'])->name('surat-keterangan-menikah.store');
     Route::get('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'show'])->name('surat-keterangan-menikah.show');
+    Route::get('/surat-keterangan-menikah/{marriageLetter}/edit', [MarriageLetterController::class, 'edit'])->name('surat-keterangan-menikah.edit');
+    Route::post('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'update'])->name('surat-keterangan-menikah.update');
+    Route::put('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'update']);
     Route::delete('/surat-keterangan-menikah/{marriageLetter}', [MarriageLetterController::class, 'destroy'])->name('surat-keterangan-menikah.destroy');
 
     // Surat Pengantar Pencetakan E-KTP
@@ -200,6 +239,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-pengantar-ktp/buat', [KtpLetterController::class, 'create'])->name('surat-pengantar-ktp.create');
     Route::post('/surat-pengantar-ktp', [KtpLetterController::class, 'store'])->name('surat-pengantar-ktp.store');
     Route::get('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'show'])->name('surat-pengantar-ktp.show');
+    Route::get('/surat-pengantar-ktp/{ktpLetter}/edit', [KtpLetterController::class, 'edit'])->name('surat-pengantar-ktp.edit');
+    Route::post('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'update'])->name('surat-pengantar-ktp.update');
+    Route::put('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'update']);
     Route::delete('/surat-pengantar-ktp/{ktpLetter}', [KtpLetterController::class, 'destroy'])->name('surat-pengantar-ktp.destroy');
 
     // Surat Keterangan Kehilangan
@@ -207,6 +249,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-kehilangan/buat', [LossLetterController::class, 'create'])->name('surat-keterangan-kehilangan.create');
     Route::post('/surat-keterangan-kehilangan', [LossLetterController::class, 'store'])->name('surat-keterangan-kehilangan.store');
     Route::get('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'show'])->name('surat-keterangan-kehilangan.show');
+    Route::get('/surat-keterangan-kehilangan/{lossLetter}/edit', [LossLetterController::class, 'edit'])->name('surat-keterangan-kehilangan.edit');
+    Route::post('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'update'])->name('surat-keterangan-kehilangan.update');
+    Route::put('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'update']);
     Route::delete('/surat-keterangan-kehilangan/{lossLetter}', [LossLetterController::class, 'destroy'])->name('surat-keterangan-kehilangan.destroy');
 
     // Surat Keterangan Penghasilan
@@ -214,6 +259,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-keterangan-penghasilan/buat', [IncomeLetterController::class, 'create'])->name('surat-keterangan-penghasilan.create');
     Route::post('/surat-keterangan-penghasilan', [IncomeLetterController::class, 'store'])->name('surat-keterangan-penghasilan.store');
     Route::get('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'show'])->name('surat-keterangan-penghasilan.show');
+    Route::get('/surat-keterangan-penghasilan/{incomeLetter}/edit', [IncomeLetterController::class, 'edit'])->name('surat-keterangan-penghasilan.edit');
+    Route::post('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'update'])->name('surat-keterangan-penghasilan.update');
+    Route::put('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'update']);
     Route::delete('/surat-keterangan-penghasilan/{incomeLetter}', [IncomeLetterController::class, 'destroy'])->name('surat-keterangan-penghasilan.destroy');
 
     // Surat Keterangan Ahli Waris Dan Saksi Ahli Waris
@@ -221,6 +269,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-ahli-waris/buat', [HeirLetterController::class, 'create'])->name('surat-ahli-waris.create');
     Route::post('/surat-ahli-waris', [HeirLetterController::class, 'store'])->name('surat-ahli-waris.store');
     Route::get('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'show'])->name('surat-ahli-waris.show');
+    Route::get('/surat-ahli-waris/{heirLetter}/edit', [HeirLetterController::class, 'edit'])->name('surat-ahli-waris.edit');
+    Route::post('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'update'])->name('surat-ahli-waris.update');
+    Route::put('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'update']);
     Route::delete('/surat-ahli-waris/{heirLetter}', [HeirLetterController::class, 'destroy'])->name('surat-ahli-waris.destroy');
 
     // Surat Permohonan Bantuan
@@ -228,6 +279,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-permohonan-bantuan/buat', [AssistanceLetterController::class, 'create'])->name('surat-permohonan-bantuan.create');
     Route::post('/surat-permohonan-bantuan', [AssistanceLetterController::class, 'store'])->name('surat-permohonan-bantuan.store');
     Route::get('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'show'])->name('surat-permohonan-bantuan.show');
+    Route::get('/surat-permohonan-bantuan/{assistanceLetter}/edit', [AssistanceLetterController::class, 'edit'])->name('surat-permohonan-bantuan.edit');
+    Route::post('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'update'])->name('surat-permohonan-bantuan.update');
+    Route::put('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'update']);
     Route::delete('/surat-permohonan-bantuan/{assistanceLetter}', [AssistanceLetterController::class, 'destroy'])->name('surat-permohonan-bantuan.destroy');
 
     // CMS Landing Page Settings

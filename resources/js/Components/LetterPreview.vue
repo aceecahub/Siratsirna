@@ -64,14 +64,14 @@ const l = computed(() => {
     const s = props.letter ?? {};
 
     return {
-        kabupaten: s.kabupaten || '',
-        kecamatan: s.kecamatan || '',
-        nama_desa: s.nama_desa || '',
+        kabupaten:  s.kabupaten  || 'Tasikmalaya',
+        kecamatan:  s.kecamatan  || 'Cigalontang',
+        nama_desa:  s.nama_desa  || 'Sirnaputra',
         alamat: s.alamat || '',
         kode_pos: s.kode_pos || '',
         kontak: s.kontak || '',
         email_desa: s.email_desa || '',
-        logo_kiri: s.logo_kiri || null,
+        logo_kiri:  s.logo_kiri  || '/images/logo-tasikmalaya.png',
         logo_kanan: s.logo_kanan || null,
         nomor_surat: s.nomor_surat || '',
         sifat: s.sifat || '',
@@ -234,27 +234,18 @@ const bottomSigners = computed(() => signers.value.filter((s) => s.peran === 'me
                             >
                                 {{ desaFormatted }}
                             </div>
-                            <div
-                                class="mt-1 text-black font-normal"
-                                :style="{ fontSize: compact ? '8.5pt' : '9pt' }"
-                            >
-                                Alamat : {{ l.alamat }}
+
+                            <div class="mt-1 text-black font-normal" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                Kantor : JalanPacihayan No 16 Sirnaputra Cigalontang
                             </div>
-                            <div
-                                class="text-black font-normal"
-                                :style="{ fontSize: compact ? '8.5pt' : '9pt' }"
-                            >
-                                <template v-if="l.email_desa">
-                                    E-Mail: {{ l.email_desa }}
-                                </template>
-                                <template v-if="l.email_desa && (l.kontak || l.kode_pos)">&nbsp;|&nbsp;</template>
-                                <template v-if="l.kontak">
-                                    Telp/HP: {{ l.kontak }}
-                                </template>
-                                <template v-if="l.kode_pos">
-                                    <span v-if="l.kontak || l.email_desa">&nbsp;|&nbsp;</span>
-                                    Kode Pos {{ l.kode_pos }}
-                                </template>
+                            <div class="text-black font-normal" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                E-mail : <span class="text-blue-700 underline font-semibold">sirnaputra@gmail.com</span>
+                            </div>
+                            <div class="text-black font-normal uppercase tracking-widest" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                TASIKMALAYA
+                            </div>
+                            <div class="text-black font-normal" :style="{ fontSize: compact ? '10pt' : '11pt' }">
+                                KodePos 46463
                             </div>
                         </div>
 

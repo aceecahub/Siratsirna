@@ -8,10 +8,6 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    canRegister: {
-        type: Boolean,
-        default: false,
-    },
     laravelVersion: {
         type: String,
         default: '',
@@ -250,29 +246,6 @@ const contactMapsUrl = computed(() => props.landingSettings?.contact_maps_url ||
                 <!-- Action Buttons & Dark Toggle -->
                 <div class="hidden items-center gap-3 lg:flex">
                     <ThemeToggle />
-
-                    <template v-if="$page.props.auth?.user">
-                        <Link
-                            :href="route('dashboard')"
-                            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:from-emerald-500 hover:to-teal-500 active:scale-95 transition"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                            </svg>
-                            Panel Administrasi
-                        </Link>
-                    </template>
-                    <template v-else-if="canLogin">
-                        <Link
-                            :href="route('login')"
-                            class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-slate-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 active:scale-95 transition"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l3 3m0 0l-3 3m3-3H2.25" />
-                            </svg>
-                            Masuk Petugas
-                        </Link>
-                    </template>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -313,22 +286,6 @@ const contactMapsUrl = computed(() => props.landingSettings?.contact_maps_url ||
                 <button @click="scrollToSection('kontak')" class="block w-full text-left py-2 text-xs font-bold text-slate-700 dark:text-slate-300">
                     Kontak & Peta
                 </button>
-                <div class="pt-2">
-                    <Link
-                        v-if="$page.props.auth?.user"
-                        :href="route('dashboard')"
-                        class="block w-full rounded-xl bg-emerald-600 py-2.5 text-center text-xs font-bold text-white shadow-md"
-                    >
-                        Panel Administrasi
-                    </Link>
-                    <Link
-                        v-else-if="canLogin"
-                        :href="route('login')"
-                        class="block w-full rounded-xl bg-slate-900 py-2.5 text-center text-xs font-bold text-white dark:bg-emerald-600 shadow-md"
-                    >
-                        Masuk Petugas
-                    </Link>
-                </div>
             </div>
         </header>
 
@@ -790,7 +747,6 @@ const contactMapsUrl = computed(() => props.landingSettings?.contact_maps_url ||
                             <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">Portal Admin</h4>
                             <ul class="mt-3 space-y-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                                 <li><Link :href="route('login')" class="hover:text-emerald-600 font-bold text-emerald-600">Log In Petugas</Link></li>
-                                <li><Link :href="route('password.request')" class="hover:text-emerald-600">Lupa Password</Link></li>
                             </ul>
                         </div>
                     </div>

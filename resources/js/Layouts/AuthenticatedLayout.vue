@@ -395,8 +395,43 @@ const isSuratActive = computed(() =>
                 </div>
 
                 <!-- Right side actions -->
-                <div class="flex items-center gap-2 shrink-0">
+                <div class="flex items-center gap-3 shrink-0">
                     <ThemeToggle />
+
+                    <!-- User Profile Dropdown in Top Header -->
+                    <div class="relative">
+                        <Dropdown align="right" width="48">
+                            <template #trigger>
+                                <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-slate-800 cursor-pointer">
+                                    <div class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-[11px] font-bold text-white uppercase shadow-sm">
+                                        {{ $page.props.auth.user.name ? $page.props.auth.user.name.charAt(0) : 'A' }}
+                                    </div>
+                                    <span class="max-w-[120px] truncate">{{ $page.props.auth.user.name }}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3.5 w-3.5 text-slate-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </button>
+                            </template>
+                            <template #content>
+                                <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white truncate">{{ $page.props.auth.user.name }}</p>
+                                    <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">{{ $page.props.auth.user.email }}</p>
+                                </div>
+                                <DropdownLink :href="route('profile.edit')" class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 text-slate-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                    </svg>
+                                    Profil Pengguna
+                                </DropdownLink>
+                                <DropdownLink :href="route('logout')" method="post" as="button" class="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l3 3m0 0l-3 3m3-3H2.25" />
+                                    </svg>
+                                    Keluar (Logout)
+                                </DropdownLink>
+                            </template>
+                        </Dropdown>
+                    </div>
                 </div>
             </header>
 
